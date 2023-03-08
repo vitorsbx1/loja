@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:pxt="http://www.peixoto.com.br/pxtFaces">
+
+	<c:if test="#{facesUtilBean.mobile}">
+		<style type="text/css">
+.rf-tb-itm {
+	width: 100%;
+}
+</style>
+	</c:if>
+
+	<h:form>
+		<rich:toolbar height="26px" itemSeparator="line">
+
+			<rich:dropDownMenu mode="ajax" label="Principal">
+				<rich:menuItem label="Tela Principal">
+					<pxt:navigation target="bemVindo.xhtml" />
+				</rich:menuItem>
+			</rich:dropDownMenu>
+
+			<rich:dropDownMenu mode="ajax" label="Cadastros">
+				<!-- 					<pxt:security 	visibleInRoles="SGV_CADAREATUACAO,SGV_CADCANDIDATO,SGV_ALTCLIENTE,SGV_CADCLIENTE,SGV_CADREPRESENTANTE,SGV_CADGRPMENSAGEM,SGV_TSFCXAVND,SGV_CNSCADREP,SGV_CADAREATENDIMENTO" /> -->
+				<!-- 					<rich:menuItem label="Área Atuação" style="width: 100%;"> -->
+				<!-- 						<pxt:navigation target="../cadastro/areaAtuacao.xhtml" /> -->
+				<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				<!-- 					</rich:menuItem> -->
+
+				<rich:menuItem label="Produto">
+					<pxt:navigation target="../cadastro/produto.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+
+
+
+				<rich:menuItem label="Pessoa">
+					<pxt:navigation target="../cadastro/pessoa.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+
+				<rich:menuItem label="Cidade">
+					<pxt:navigation target="../cadastro/cidade.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+
+
+				<rich:menuItem label="Estado">
+					<pxt:navigation target="../cadastro/estado.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+
+<rich:menuItem label="SugestaoPedido">
+					<pxt:navigation target="../cadastro/SugestaoPedido.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+				
+				<rich:menuItem label="ConsultaPedido">
+					<pxt:navigation target="../consulta/consultaPessoa.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+
+
+
+
+			</rich:dropDownMenu>
+			
+			<rich:dropDownMenu mode="ajax" label="Consulta">
+				<!-- 					<pxt:security 	visibleInRoles="SGV_CADAREATUACAO,SGV_CADCANDIDATO,SGV_ALTCLIENTE,SGV_CADCLIENTE,SGV_CADREPRESENTANTE,SGV_CADGRPMENSAGEM,SGV_TSFCXAVND,SGV_CNSCADREP,SGV_CADAREATENDIMENTO" /> -->
+				<!-- 					<rich:menuItem label="Área Atuação" style="width: 100%;"> -->
+				<!-- 						<pxt:navigation target="../cadastro/areaAtuacao.xhtml" /> -->
+				<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				<!-- 					</rich:menuItem> -->
+				
+				
+				<rich:menuItem label="Produto">
+					<pxt:navigation target="../consulta/consultaProdutos.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+				
+				<rich:menuItem label="Pessoa">
+					<pxt:navigation target="../consulta/consultaPessoa.xhtml" />
+					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				</rich:menuItem>
+				
+				
+				
+			</rich:dropDownMenu>
+
+		</rich:toolbar>
+	</h:form>
+</ui:composition>

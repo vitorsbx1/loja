@@ -1,0 +1,35 @@
+.treeChart .line {
+  height                : 20px;
+  width                 : 4px;
+}
+
+.treeChart .down {
+  background-color 		: #0B356C;	
+  margin 				: 0px auto;
+}
+
+.treeChart .top {
+  border-top          : 3px solid #0B356C;
+}
+
+.treeChart .left {
+  border-right          : 2px solid #0B356C;
+}
+
+.treeChart .left-bold {
+  border-right          : 4px solid #0B356C;
+}
+
+.treeChart .right {
+  border-left           : 2px solid #0B356C;
+}
+
+.treeChart .right-bold {
+  border-left          : 4px solid #0B356C;
+}
+
+/* node cell */
+.treeChart td {
+  vertical-align        : top;
+  padding               : 0;
+}

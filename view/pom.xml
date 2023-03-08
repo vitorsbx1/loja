@@ -1,0 +1,160 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>pxt.loja</groupId>
+		<artifactId>loja-all</artifactId>
+		<version>${loja.version}</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>loja-view</artifactId>
+	<packaging>war</packaging>
+	<name>Sistema de Loja - View</name> 
+	<url>http://www.peixoto.com.br</url>
+
+
+	<properties>
+		<!-- BASIC -->
+		<jboss-javaee-web-6.0.version>3.0.2.Final</jboss-javaee-web-6.0.version>
+		<el-impl.version>2.2</el-impl.version>
+		<jstl.version>1.2</jstl.version>
+		<!-- CUSTON -->
+		<seguranca-domain.version>3.0.11</seguranca-domain.version>
+		<poi.version>3.8</poi.version>
+		<mobile-esp.version>1.1.2</mobile-esp.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>loja-domain</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>loja-service</artifactId>
+			<scope>provided</scope>
+			<type>ejb</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.ui</groupId>
+			<artifactId>richfaces-components-api</artifactId>
+			<version>4.3.7.Final</version>
+
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>5.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>5.6.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.ui</groupId>
+			<artifactId>richfaces-components-ui</artifactId>
+			<version>4.3.7.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.core</groupId>
+			<artifactId>richfaces-core-impl</artifactId>
+			<version>4.3.7.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.github.autograder</groupId>
+			<artifactId>mobile-esp</artifactId>
+			<version>${mobile-esp.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>pxt.framework</groupId>
+			<artifactId>pxt-commons</artifactId>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>pxt.framework</groupId>
+			<artifactId>pxt-faces</artifactId>
+			<version>${pxt.framework.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>pxt-persistence</artifactId>
+					<groupId>pxt.framework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-io</artifactId>
+					<groupId>commons-io</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-beanutils</artifactId>
+					<groupId>commons-beanutils</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>itext</artifactId>
+					<groupId>com.lowagie</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- BASIC -->
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-web-6.0</artifactId>
+			<version>${jboss-javaee-web-6.0.version}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<version>${el-impl.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<version>${el-impl.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>

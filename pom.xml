@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pxt.loja</groupId>
+	<artifactId>loja-all</artifactId>
+	<packaging>pom</packaging>
+	<version>${loja.version}</version>
+	<name>Sistema de Loja</name>
+	<url>http://www.peixoto.com.br</url>
+
+	<prerequisites>
+		<maven>3.0.2</maven>
+	</prerequisites>
+
+	<modules>
+		<module>domain</module>
+		<module>service</module>
+		<module>view</module>
+		<module>ear</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<!-- BUILD -->
+		<compilation.version>1.7</compilation.version>
+		<jboss-as-maven-plugin.version>7.4.Final</jboss-as-maven-plugin.version>
+		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+		<!-- TEST -->
+		<junit.version>4.11</junit.version>
+		<jboss-as-ejb-client-bom.version>7.1.1.Final</jboss-as-ejb-client-bom.version>
+		<!-- BASICS -->
+		<jboss-javaee-6.0.version>3.0.2.Final</jboss-javaee-6.0.version>
+		<pxt.framework.version>3.1.1</pxt.framework.version>
+		<commons-lang.version>1.0</commons-lang.version>
+		<commons-email.version>1.3.3</commons-email.version>
+		<loja.version>1.0.0</loja.version>
+	</properties>
+
+	<dependencies>
+		<!-- TEST -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>loja-domain</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>loja-service</artifactId>
+				<version>${project.version}</version>
+				<type>ejb</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>loja-view</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
+			</dependency>
+
+			<!-- BASICS -->
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee-6.0.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>pxt.framework</groupId>
+				<artifactId>pxt-commons</artifactId>
+				<version>${pxt.framework.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>pxt.framework</groupId>
+				<artifactId>pxt-validation</artifactId>
+				<version>${pxt.framework.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>pxt.framework</groupId>
+				<artifactId>pxt-persistence</artifactId>
+				<version>${pxt.framework.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>pxt.framework</groupId>
+				<artifactId>pxt-security</artifactId>
+				<version>${pxt.framework.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.as</groupId>
+				<artifactId>jboss-as-ejb-client-bom</artifactId>
+				<version>${jboss-as-ejb-client-bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-email</artifactId>
+				<version>${commons-email.version}</version>
+			</dependency>
+							
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${compilation.version}</source>
+					<target>${compilation.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<testFailureIgnore>false</testFailureIgnore>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jboss.as.plugins</groupId>
+					<artifactId>jboss-as-maven-plugin</artifactId>
+					<version>${jboss-as-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

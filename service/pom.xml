@@ -1,0 +1,229 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>pxt.loja</groupId>
+		<artifactId>loja-all</artifactId>
+		<version>${loja.version}</version>
+	</parent>
+	<artifactId>loja-service</artifactId>
+	<packaging>ejb</packaging>
+	<name>Sistema de Loja - Service</name>
+	<url>http://www.peixoto.com.br</url>
+
+	<properties>
+		<!-- BUILD -->
+		<ejbVersion.version>3.1</ejbVersion.version>
+		<maven-ejb-plugin.version>2.3</maven-ejb-plugin.version>
+		<!-- BASICS -->
+		<jboss-ejb3-ext-api.version>2.0.0</jboss-ejb3-ext-api.version>
+		<!-- CUSTONS -->
+		<seguranca-service.version>3.0.11</seguranca-service.version>
+		<poi.version>3.8</poi.version>
+		<pedidoprocessor.version>3.23</pedidoprocessor.version>
+		<cadastro-domain.version>3.1.13</cadastro-domain.version>
+		<!-- EXTRAS -->
+		<js-interfaces.version>1.0</js-interfaces.version>
+		<js-jboss.version>1.0</js-jboss.version>
+		<joda.version>2.1</joda.version>
+		<ehcache.version>4.1.9.Final</ehcache.version>
+		<flexjson.version>2.1</flexjson.version>
+	</properties>
+
+	<dependencies>
+		<!-- CUSTONS -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>loja-domain</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>pxt.seguranca</groupId>
+			<artifactId>seguranca-domain</artifactId>
+			<version>${seguranca-service.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>pxt.seguranca</groupId>
+			<artifactId>seguranca-service</artifactId>
+			<version>${seguranca-service.version}</version>
+			<type>ejb-client</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>2.0-m04</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.6</version>
+		</dependency>
+
+
+		<dependency>
+        	<groupId>org.apache.httpcomponents</groupId>
+        	<artifactId>httpclient</artifactId>
+    	</dependency>
+
+		<dependency>
+			<groupId>pxt.framework</groupId>
+			<artifactId>pxt-persistence</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>dom4j</artifactId>
+					<groupId>dom4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>pxt.framework</groupId>
+			<artifactId>pxt-security</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- EXTRAS -->
+		<dependency>
+			<groupId>easytech</groupId>
+			<artifactId>js-jboss</artifactId>
+			<version>${js-jboss.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>easytech</groupId>
+			<artifactId>js-interfaces</artifactId>
+			<version>${js-interfaces.version}</version>
+		</dependency>
+
+		<!-- BASICS -->
+		<dependency>
+			<groupId>org.jboss.spec.javax.ejb</groupId>
+			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.spec.javax.annotation</groupId>
+			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.ejb3</groupId>
+			<artifactId>jboss-ejb3-ext-api</artifactId>
+			<version>${jboss-ejb3-ext-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.flexjson</groupId>
+			<artifactId>flexjson</artifactId>
+			<version>${flexjson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${ehcache.version}</version>
+		</dependency>
+
+
+		<!-- TESTE -->
+
+		<dependency>
+			<groupId>org.jboss.xnio</groupId>
+			<artifactId>xnio-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.xnio</groupId>
+			<artifactId>xnio-nio</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.remoting3</groupId>
+			<artifactId>jboss-remoting</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.marshalling</groupId>
+			<artifactId>jboss-marshalling-river</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jboss-remote-naming</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.4</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>${maven-ejb-plugin.version}</version>
+				<configuration>
+					<ejbVersion>${ejbVersion.version}</ejbVersion>
+					<generateClient>true</generateClient>
+					<clientIncludes>
+						<clientInclude>**/*Facade.class</clientInclude>
+					</clientIncludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

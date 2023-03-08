@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>loja-all</artifactId>
+		<groupId>pxt.loja</groupId>
+		<version>${loja.version}</version>
+	</parent>
+	<artifactId>loja-ear</artifactId>
+	<packaging>ear</packaging>
+	<name>Sistema de Loja - Ear</name>
+
+	<properties>
+		<maven-ear-plugin.version>2.8</maven-ear-plugin.version> 
+		<commons-io.version>2.0.1</commons-io.version>
+		<commons-beanutils.version>1.8.3</commons-beanutils.version>
+		<itext.version>2.1.7</itext.version>
+		<seguranca-service.version>3.0.11</seguranca-service.version>
+		<xercesImpl.version>2.9.1</xercesImpl.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>loja-service</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>loja-view</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>pxt.seguranca</groupId>
+			<artifactId>seguranca-service</artifactId>
+			<version>${seguranca-service.version}</version>
+			<type>ejb-client</type>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>${itext.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>${xercesImpl.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>${maven-ear-plugin.version}</version>
+				<configuration>
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<displayName>loja-${project.version}</displayName>
+					<applicationName>loja</applicationName>
+					<version>6</version>
+					<modules>
+						<jarModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>loja-domain</artifactId>
+						</jarModule>
+						<jarModule>
+							<groupId>commons-io</groupId>
+							<artifactId>commons-io</artifactId>
+						</jarModule>
+						<jarModule>
+							<groupId>commons-beanutils</groupId>
+							<artifactId>commons-beanutils</artifactId>
+						</jarModule>
+						<jarModule>
+							<groupId>com.lowagie</groupId>
+							<artifactId>itext</artifactId>
+						</jarModule>
+						<ejbClientModule>
+							<groupId>pxt.seguranca</groupId>
+							<artifactId>seguranca-service</artifactId>
+						</ejbClientModule>
+						<ejbModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>loja-service</artifactId>
+							<bundleFileName>loja-service.jar</bundleFileName>
+						</ejbModule>
+						<webModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>loja-view</artifactId>
+							<bundleFileName>loja-view.war</bundleFileName>
+							<contextRoot>/loja</contextRoot>
+						</webModule>
+					</modules>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<finalName>loja-${project.version}</finalName>
+	</build>
+</project>

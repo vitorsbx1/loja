@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition template="/META-INF/facelets/templates/layout.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:pxt="http://www.peixoto.com.br/pxtFaces"
+	xmlns:pxtcc="http://java.sun.com/jsf/composite/peixoto">
+	<ui:param name="titulo" value="Sistema de Cadastro" />
+
+	<ui:define name="javascript">
+		<script type="text/javascript">
+			var mensagemForm;
+			
+			function openMensagem() {
+				//Abre a tela de mensagem
+				mensagemForm = window.open('#{facesContext.externalContext.requestContextPath}/comunicacao/mensagens.jsf', '_mensagem', 'width=815,height=550,titlebar=no,status=no,resizable=no,scrollbars=yes');
+			}
+		</script>
+	</ui:define>
+
+	<ui:define name="menu">
+		<c:choose>
+			<c:when test="#{!facesUtilBean.mobile}">							
+				<ui:include src="menu.xhtml" />
+			</c:when>
+			<c:when test="#{facesUtilBean.mobile}">
+				<h:form>
+					<a4j:commandButton value="#{facesUtilBean.contentPage eq 'menu.xhtml' ? principalBean.labelMenuPrincipal : principalBean.labelVoltarMenuPrincipal}" style="heigth: 24px; width: 100%; cursor: pointer" disabled="#{facesUtilBean.contentPage eq 'menu.xhtml'}">
+						<pxt:navigation target="menu.xhtml" />
+					</a4j:commandButton>			
+				</h:form>
+			</c:when>
+		</c:choose>	
+	</ui:define>
+
+
+
+
+
+	<ui:define name="conteudo">
+		<ui:include src="#{facesUtilBean.contentPage}" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:pxt="http://www.peixoto.com.br/pxtFaces" xmlns:pxtfl="http://www.peixoto.com.br/jsf"
+	xmlns:pxtc="http://www.peixoto.com.br/jsf/core" template="/META-INF/facelets/templates/search.xhtml">
+
+	<ui:define name="toolbarButtonsRight">
+		<a4j:commandLink>
+			<h:graphicImage value="#{facesContext.externalContext.requestContextPath}/faces/javax.faces.resource/informacao_16x16.png?ln=img"/>
+			<rich:tooltip layout="block">
+				<pxt:panelGrid columnsWidth="100%">
+					<pxt:cell align="center">
+						<h:outputText value="Atualização das Informações" styleClass="outputText" style="font-size: 14px;"/>
+					</pxt:cell>
+					<pxt:cell>
+						<h:panelGroup>
+							<h:outputText value="Última Atualização: " styleClass="outputText"/>
+							<h:outputText value="#{backingBean.informacaoExecucaoCargaDados.dataUltimaExecucao}" styleClass="outputText">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Sao_Paulo"/>
+							</h:outputText>
+						</h:panelGroup>
+					</pxt:cell>
+					<pxt:cell>
+						<h:panelGroup>
+							<h:outputText value="Próxima Atualização: " styleClass="outputText"/>
+							<h:outputText value="#{backingBean.informacaoExecucaoCargaDados.dataProximaExecucao}" styleClass="outputText" >
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="America/Sao_Paulo"/>
+							</h:outputText>
+						</h:panelGroup>
+					</pxt:cell>
+				</pxt:panelGrid>
+			</rich:tooltip>		
+		</a4j:commandLink>		
+	</ui:define>
+
+
+	<ui:define name="panelFiltroPadrao">
+		<pxt:panelGrid id="panelFiltroPadrao" columnsWidth="${empty tipoFiltroPeriodo or tipoFiltroPeriodo eq 'none' ? '10%;90%' : tipoFiltroPeriodo eq 'simples' ? '10%;10%;80%' : tipoFiltroPeriodo eq 'duplo' ? '20%;10%;70%' : '30%;10%;60%'}" width="100%">
+			<c:if test="${!empty tipoFiltroPeriodo}">
+							<ui:insert name="labelFiltroPeriodo" />
+			</c:if>
+			<h:outputText value="Canal Venda:" styleClass="outputText"/>			
+		 	<pxt:panelGrid width="100%" cellpadding="0" cellspacing="0" border="0" columnsWidth="#{backingBean.tipoLayoutEstrutura eq 'EMPRESA' ? '60%;40%' : '40%;60%'}" id="panelA">
+				<pxt:panelGrid columnsWidth="33%;33%;34%" width="100%" rendered="#{backingBean.tipoLayoutEstrutura eq 'SMV'}" cellpadding="0" cellspacing="0" border="0" >
+					<h:outputText value="Divisão:" styleClass="outputText"/>
+					<h:outputText value="Região:" styleClass="outputText"/>
+					<c:if test="#{backingBean.exibirComboSetor}">
+						<h:outputText value="Setor:" styleClass="outputText"/>
+					</c:if>
+				</pxt:panelGrid>
+				<h:outputText value="Equipe:" styleClass="outputText" rendered="#{backingBean.tipoLayoutEstrutura eq 'CONTACT_CENTER'}"/>				
+				<h:outputText value="Região Rede Valor:" styleClass="outputText" rendered="#{backingBean.tipoLayoutEstrutura eq 'REDE_VALOR'}"/>
+				<h:outputText value="Área Distribuição:" styleClass="outputText" rendered="#{backingBean.tipoLayoutEstrutura eq 'DISTRIBUICAO'}"/>
+				<pxt:panelGrid columnsWidth="20%;20%;34%" width="100%" cellpadding="0" cellspacing="0" border="0">
+					<h:outputText value="Vendedor:" styleClass="outputText" rendered="#{backingBean.exibirSearchVendedor}" />
+					<h:outputText value="" styleClass="outputText" rendered="#{!backingBean.exibirSearchVendedor}"/>				
+					<h:panelGroup>
+						<h:outputText value="" styleClass="outputText" />
+						<h:outputText value="" styleClass="outputText" />
+						<h:outputText value="" styleClass="outputText" rendered="#{backingBean.exibirVendedorCadastrado}"/>						
+					</h:panelGroup>							
+				</pxt:panelGrid>					
+				<pxt:panelGrid columnsWidth="*" width="100%" rendered="#{backingBean.tipoLayoutEstrutura eq 'EMPRESA'}" cellpadding="0" cellspacing="0" border="0"/>								
+			</pxt:panelGrid>
+
+			<c:if test="${!empty tipoFiltroPeriodo}">
+				<ui:insert name="inputFiltroPeriodo" />
+			</c:if>	
+			<h:selectOneMenu id="canalVenda" value="#{backingBean.canalVenda}" style="width: 97%" converter="defaultConverter">
+				<a4j:ajax event="change" execute="@this" render="panelA,panelB${!empty showPanelColunas ? ',panelColunas' : ''}" listener="#{backingBean.changeCombosEstrutura}" />
+				<c:if test="#{backingBean.exibirItemNuloCanalVenda}">
+					<f:selectItem itemLabel="" itemValue="" noSelectionOption="true" />
+				</c:if>
+				<f:selectItems value="#{backingBean.canalVendaLista}" />
+			</h:selectOneMenu>
+			<pxt:panelGrid width="100%" cellpadding="0" cellspacing="0" border="0" columnsWidth="#{backingBean.tipoLayoutEstrutura eq 'EMPRESA' ? '83%;17%' : '40%;60%'}" id="panelB">
+				<pxt:panelGrid columnsWidth="33%;33%;34%" width="100%" rendered="#{backingBean.tipoLayoutEstrutura eq 'SMV'}" cellpadding="0" cellspacing="0" border="0">
+					<h:selectOneMenu id="cmbDivisao" value="#{backingBean.divisao}" style="width: 90%" converter="defaultConverter"	valueChangeListener="#{backingBean.changeDivisaoRegiaoCombo}" listWidth="100%">
+						<a4j:ajax event="change" render="cmbRegiao,cmdSetor,nomeIndicadorVendedorCadastrado" execute="@this" />
+						<f:selectItems value="#{backingBean.divisaoLista}" />
+					</h:selectOneMenu>
+					<h:selectOneMenu id="cmbRegiao" value="#{backingBean.regiao}" style="width: 90%" converter="defaultConverter" valueChangeListener="#{backingBean.changeDivisaoRegiaoCombo}" listWidth="100%">
+						<a4j:ajax event="change" render="cmdSetor,nomeIndicadorVendedorCadastrado" execute="@this" />
+						<f:selectItems value="#{backingBean.regiaoLista}" />
+					</h:selectOneMenu>
+					<c:if test="#{backingBean.exibirComboSetor}">
+						<h:selectOneMenu id="cmdSetor" value="#{backingBean.setor}" style="width: 90%" listWidth="100%" converter="defaultConverter" disabled="#{empty backingBean.setorLista}">
+							<f:selectItem noSelectionOption="true" itemLabel="SELECIONE" />
+							<f:selectItems value="#{backingBean.setorLista}" />
+							<a4j:ajax event="change" execute="@this" />
+						</h:selectOneMenu>						
+					</c:if>
+				</pxt:panelGrid>
+				<h:selectOneMenu id="equipe" value="#{backingBean.equipeContactCenter}" converter="defaultConverter" rendered="#{backingBean.tipoLayoutEstrutura eq 'CONTACT_CENTER'}" style="width: 97%" listWidth="64%" styleClass="sel-input-ajust" >
+					<f:selectItems value="#{backingBean.equipeContactCenterLista}" />
+					<a4j:ajax event="change" execute="@this" />
+				</h:selectOneMenu>								
+				<h:selectOneMenu id="regiaoRedeValor" value="#{backingBean.regiaoRedeValor}" converter="defaultConverter" rendered="#{backingBean.tipoLayoutEstrutura eq 'REDE_VALOR'}"	style="width: 97%" listWidth="64%" styleClass="sel-input-ajust" >
+					<f:selectItems value="#{backingBean.regiaoRedeValorLista}" />
+					<a4j:ajax event="change" execute="@this" />
+				</h:selectOneMenu>
+				<h:selectOneMenu id="areaDistribuicao" value="#{backingBean.areaVendaDistribuicao}" converter="defaultConverter" rendered="#{backingBean.tipoLayoutEstrutura eq 'DISTRIBUICAO'}"	style="width: 97%" listWidth="64%" styleClass="sel-input-ajust" >
+					<f:selectItems value="#{backingBean.areaVendaDistribuicaoLista}" />
+					<a4j:ajax event="change" execute="@this" />
+				</h:selectOneMenu>								
+				<pxt:panelGrid columnsWidth="*;*;*;*;*" width="100%" cellpadding="0" cellspacing="0" border="0">
+					<pxtfl:searchField id="searchVendedor" controller="#{backingBean.searchVendedor}" modalTitle="Equipe Comercial" searchProperty="nome" width="98%" clearFields="true" rows="10" rendered="#{backingBean.exibirSearchVendedor}">
+						<ui:define name="filtros">
+							<pxt:panelGrid columnsWidth="15px;*" width="100%">
+								<h:outputText value="Código:" styleClass="outputText" />
+								<h:inputText maxlength="10" value="#{backingBean.searchVendedor.searchObject.codigo}" style="width:100px">
+									<pxt:onlyNumber />
+								</h:inputText>
+								<h:outputText value="Nome:" styleClass="outputText" />
+								<h:inputText maxlength="40" value="#{backingBean.searchVendedor.searchObject.nome}" style="width:98%">
+									<pxt:upperCase />
+								</h:inputText>
+								<h:outputText value="Cpf:" styleClass="outputText" />
+								<h:inputText maxlength="11" value="#{backingBean.searchVendedor.searchObject.cpf}" style="width:100px">
+									<pxt:onlyNumber />
+								</h:inputText>
+							</pxt:panelGrid>
+						</ui:define>
+						<ui:define name="colunas">
+							<pxtfl:column headerValue="Código" value="#{obj.codigo}" columnWidth="10%" />
+							<pxtfl:column headerValue="Nome" value="#{obj.nome}" columnWidth="75%" />
+							<pxtfl:column headerValue="Cpf" value="#{obj.cpf}" columnWidth="15%" />
+						</ui:define>
+					</pxtfl:searchField>
+					<h:outputText value="" styleClass="outputText" rendered="#{!backingBean.exibirSearchVendedor}"/>					
+					<pxt:cell align="center">
+						<h:panelGroup rendered="#{!backingBean.exibirEcommerce and backingBean.exibirMixEmarcaPropria}">
+							<h:selectBooleanCheckbox title="Mix Estratégico" value="#{backingBean.mixEstrategico}" rendered="#{!backingBean.exibirEcommerce and backingBean.exibirMixEmarcaPropria}" />
+							<h:outputText value="Mix Estratégico" styleClass="outputText" rendered="#{!backingBean.exibirEcommerce and backingBean.exibirMixEmarcaPropria}" />
+						</h:panelGroup>
+						<h:panelGroup rendered="#{backingBean.exibirEcommerce}">
+							<h:selectBooleanCheckbox title="E-Commerce" value="#{backingBean.ecommerce}" rendered="#{backingBean.exibirEcommerce}" />
+							<h:outputText value="E-Commerce" styleClass="outputText" rendered="#{backingBean.exibirEcommerce}" />
+						</h:panelGroup>
+					</pxt:cell>	
+					<pxt:cell align="center">
+						<h:panelGroup>
+							<h:selectBooleanCheckbox title="Valor" value="#{backingBean.marcaPropria}" rendered="#{backingBean.exibirMixEmarcaPropria}" />
+							<h:outputText value="Valor" styleClass="outputText" rendered="#{backingBean.exibirMixEmarcaPropria}" />
+						</h:panelGroup>
+					</pxt:cell>	
+					<pxt:cell align="center">
+						<h:panelGroup>
+							<h:selectBooleanCheckbox value="#{backingBean.vendedorCadastrado}" rendered="#{backingBean.exibirVendedorCadastrado}" />
+							<h:outputText value="#{backingBean.nomeIndicadorVendedorCadastrado}" styleClass="outputText" id="nomeIndicadorVendedorCadastrado" rendered="#{backingBean.exibirVendedorCadastrado}" />
+						</h:panelGroup>
+					</pxt:cell>	
+					<pxt:cell align="center">
+						<h:panelGroup>
+							<h:selectBooleanCheckbox title="Considerar Pedidos em Analise" value="#{backingBean.pedidosEmAnalise}" rendered="#{backingBean.exibirPedidosEmAnalise}" />
+							<h:outputText value="Pedidos em Analise" styleClass="outputText" rendered="#{backingBean.exibirPedidosEmAnalise}" />
+						</h:panelGroup>
+					</pxt:cell>	
+				</pxt:panelGrid>
+				<pxt:panelGrid columnsWidth="*" width="100%" rendered="#{backingBean.tipoLayoutEstrutura eq 'EMPRESA'}" cellpadding="0" cellspacing="0" border="0"/>							
+			</pxt:panelGrid>	
+		</pxt:panelGrid>	
+	</ui:define>
+</ui:composition>
