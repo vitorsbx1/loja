@@ -26,71 +26,25 @@
 			</rich:dropDownMenu>
 
 			<rich:dropDownMenu mode="ajax" label="Cadastros">
-				<!-- 					<pxt:security 	visibleInRoles="SGV_CADAREATUACAO,SGV_CADCANDIDATO,SGV_ALTCLIENTE,SGV_CADCLIENTE,SGV_CADREPRESENTANTE,SGV_CADGRPMENSAGEM,SGV_TSFCXAVND,SGV_CNSCADREP,SGV_CADAREATENDIMENTO" /> -->
-				<!-- 					<rich:menuItem label="Área Atuação" style="width: 100%;"> -->
-				<!-- 						<pxt:navigation target="../cadastro/areaAtuacao.xhtml" /> -->
-				<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				<!-- 					</rich:menuItem> -->
 
+				<rich:menuItem label="Marca">
+					<pxt:navigation target="../cadastro/marca.xhtml" />
+				</rich:menuItem>
+				
+				<rich:menuItem label="Fornecedor">
+					<pxt:navigation target="../cadastro/fornecedor.xhtml" />
+				</rich:menuItem>
+				
 				<rich:menuItem label="Produto">
 					<pxt:navigation target="../cadastro/produto.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				</rich:menuItem>
-
-
-
-				<rich:menuItem label="Pessoa">
-					<pxt:navigation target="../cadastro/pessoa.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				</rich:menuItem>
-
-				<rich:menuItem label="Cidade">
-					<pxt:navigation target="../cadastro/cidade.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				</rich:menuItem>
-
-
-				<rich:menuItem label="Estado">
-					<pxt:navigation target="../cadastro/estado.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				</rich:menuItem>
-
-<rich:menuItem label="SugestaoPedido">
-					<pxt:navigation target="../cadastro/SugestaoPedido.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
 				</rich:menuItem>
 				
-				<rich:menuItem label="ConsultaPedido">
-					<pxt:navigation target="../consulta/consultaPessoa.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
+				<rich:menuItem label="Cliente">
+					<pxt:navigation target="../cadastro/cliente.xhtml" />
 				</rich:menuItem>
-
-
-
 
 			</rich:dropDownMenu>
-			
-			<rich:dropDownMenu mode="ajax" label="Consulta">
-				<!-- 					<pxt:security 	visibleInRoles="SGV_CADAREATUACAO,SGV_CADCANDIDATO,SGV_ALTCLIENTE,SGV_CADCLIENTE,SGV_CADREPRESENTANTE,SGV_CADGRPMENSAGEM,SGV_TSFCXAVND,SGV_CNSCADREP,SGV_CADAREATENDIMENTO" /> -->
-				<!-- 					<rich:menuItem label="Área Atuação" style="width: 100%;"> -->
-				<!-- 						<pxt:navigation target="../cadastro/areaAtuacao.xhtml" /> -->
-				<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				<!-- 					</rich:menuItem> -->
 				
-				
-				<rich:menuItem label="Produto">
-					<pxt:navigation target="../consulta/consultaProdutos.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				</rich:menuItem>
-				
-				<rich:menuItem label="Pessoa">
-					<pxt:navigation target="../consulta/consultaPessoa.xhtml" />
-					<!-- 						<pxt:security visibleInRoles="SGV_CADAREATUACAO" /> -->
-				</rich:menuItem>
-				
-				
-				
-			</rich:dropDownMenu>
 
 		</rich:toolbar>
 	</h:form>

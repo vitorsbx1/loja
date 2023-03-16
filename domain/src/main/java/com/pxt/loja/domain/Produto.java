@@ -1,19 +1,28 @@
 package com.pxt.loja.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name = "VITORSB.TLJPRODUTO")
-public class Produto {
+public class Produto implements Serializable{
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRO_SEQ")
 	@SequenceGenerator(name = "PRO_SEQ", sequenceName = "VITORSB.LJPRODUTO_SEQ", initialValue = 1, allocationSize = 1)
@@ -26,8 +35,13 @@ public class Produto {
 	@Column(name = "TAMPRO")
 	private Double tamanhoProduto;
 	
-	@Column(name = "MRCPRO")
-	private String marcaProduto;
+	@ManyToOne(targetEntity = Marca.class) // Vários produtos para 1 Marca
+	@JoinColumn(name = "CODMRC", referencedColumnName = "CODMRC")
+	private Marca marca;
+	
+	@ManyToOne(targetEntity = Fornecedor.class) // Vários produtos para 1 Fornecedor
+	@JoinColumn(name = "CODFRN", referencedColumnName = "CODFRN")
+	private Fornecedor fornecedor;
 	
 	@Column(name = "MDLPRO")
 	private String modeloProduto;
@@ -37,6 +51,9 @@ public class Produto {
 	
 	@Column(name = "CORPRO")
 	private String corProduto;
+	
+	@Column(name = "INDATV")
+	private Boolean indicadorAtivo = true;
 
 	public Long getCodigoProduto() {
 		return codigoProduto;
@@ -62,12 +79,20 @@ public class Produto {
 		this.tamanhoProduto = tamanhoProduto;
 	}
 
-	public String getMarcaProduto() {
-		return marcaProduto;
+	public Marca getMarca() {
+		return marca;
 	}
 
-	public void setMarcaProduto(String marcaProduto) {
-		this.marcaProduto = marcaProduto;
+	public void setMarca(Marca marca) {
+		this.marca = marca;
+	}
+
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
 	}
 
 	public String getModeloProduto() {
@@ -94,6 +119,14 @@ public class Produto {
 		this.corProduto = corProduto;
 	}
 
+	public Boolean getIndicadorAtivo() {
+		return indicadorAtivo;
+	}
+
+	public void setIndicadorAtivo(Boolean indicadorAtivo) {
+		this.indicadorAtivo = indicadorAtivo;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -109,7 +142,10 @@ public class Produto {
 				* result
 				+ ((descricaoProduto == null) ? 0 : descricaoProduto.hashCode());
 		result = prime * result
-				+ ((marcaProduto == null) ? 0 : marcaProduto.hashCode());
+				+ ((fornecedor == null) ? 0 : fornecedor.hashCode());
+		result = prime * result
+				+ ((indicadorAtivo == null) ? 0 : indicadorAtivo.hashCode());
+		result = prime * result + ((marca == null) ? 0 : marca.hashCode());
 		result = prime * result
 				+ ((modeloProduto == null) ? 0 : modeloProduto.hashCode());
 		result = prime * result
@@ -146,10 +182,20 @@ public class Produto {
 				return false;
 		} else if (!descricaoProduto.equals(other.descricaoProduto))
 			return false;
-		if (marcaProduto == null) {
-			if (other.marcaProduto != null)
+		if (fornecedor == null) {
+			if (other.fornecedor != null)
 				return false;
-		} else if (!marcaProduto.equals(other.marcaProduto))
+		} else if (!fornecedor.equals(other.fornecedor))
+			return false;
+		if (indicadorAtivo == null) {
+			if (other.indicadorAtivo != null)
+				return false;
+		} else if (!indicadorAtivo.equals(other.indicadorAtivo))
+			return false;
+		if (marca == null) {
+			if (other.marca != null)
+				return false;
+		} else if (!marca.equals(other.marca))
 			return false;
 		if (modeloProduto == null) {
 			if (other.modeloProduto != null)
@@ -168,14 +214,14 @@ public class Produto {
 	public String toString() {
 		return "Produto [codigoProduto=" + codigoProduto
 				+ ", descricaoProduto=" + descricaoProduto
-				+ ", tamanhoProduto=" + tamanhoProduto + ", marcaProduto="
-				+ marcaProduto + ", modeloProduto=" + modeloProduto
-				+ ", categoriaProduto=" + categoriaProduto + ", corProduto="
-				+ corProduto + "]";
+				+ ", tamanhoProduto=" + tamanhoProduto + ", marca=" + marca
+				+ ", fornecedor=" + fornecedor + ", modeloProduto="
+				+ modeloProduto + ", categoriaProduto=" + categoriaProduto
+				+ ", corProduto=" + corProduto + ", indicadorAtivo="
+				+ indicadorAtivo + "]";
 	}
 
-	
-	
+
 	
 	
 	

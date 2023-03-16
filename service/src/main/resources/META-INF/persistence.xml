@@ -2,7 +2,7 @@
 <persistence version="1.0"
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-	<persistence-unit name="ETQDS">
+	<persistence-unit name="LOJA">
 		<!-- Connection settings -->
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/datasources/ETQDS</jta-data-source>
@@ -10,8 +10,10 @@
 		<!-- Entidades da Loja -->
 
 		<class>com.pxt.loja.domain.Produto</class>
-		<class>com.pxt.loja.domain.Estoque</class>
-		<class>com.pxt.loja.domain.MovimentacaoEstoque</class>
+		<class>com.pxt.loja.domain.Fornecedor</class>
+		<class>com.pxt.loja.domain.Marca</class>
+		<class>com.pxt.loja.domain.Cliente</class>
+
 		<properties>
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="false" />
@@ -19,11 +21,9 @@
 			<property name="hibernate.query.substitutions" value="true 1, false 0, yes 'Y', no 'N'" />
 			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
 
-			<property name="hibernate.cache.region.factory_class"
-				value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+			<property name="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
 			<property name="hibernate.cache.use_query_cache" value="false" />
-			<property name="hibernate.cache.use_second_level_cache"
-				value="false" />
+			<property name="hibernate.cache.use_second_level_cache"	value="false" />
 
 		</properties>
 	</persistence-unit>

@@ -1,4 +1,6 @@
-package com.pxt.loja.domain;
+/*package com.pxt.loja.domain;
+
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,11 +11,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "VITORSB.TLJESTOQUE")
-public class Estoque {
+public class Estoque implements Serializable{
 	
 	@Id
-	@Column(name = "CODPRO")
-	@OneToOne(targetEntity = Produto.class) // Um estoque para um Produto
+	@OneToOne// Um estoque para um Produto
 	@JoinColumn(name = "CODPRO", referencedColumnName = "CODPRO")
 	private Produto produto;
 	
@@ -122,3 +123,4 @@ public class Estoque {
 	
 
 }
+*/

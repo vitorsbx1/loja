@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" xmlns:pxt="http://www.peixoto.com.br/pxtFaces"
+	xmlns:pxtfl="http://www.peixoto.com.br/jsf" xmlns:pxtfc="http://www.peixoto.com.br/jsf/core">
+
+	<ui:composition template="/META-INF/facelets/templates/crud.xhtml">
+		<ui:param name="form_id" value="formMarca" />
+		<ui:param name="backingBean" value="#{marcaBean}" />
+		<ui:param name="titulo" value="Marca" />
+	
+		<ui:define name="panelCadastro">
+			
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="30%;60%;10%" width="100%">
+				<h:outputLabel value="Código:" styleClass="outputText" />
+				<h:outputLabel value="Descrição:" styleClass="outputText" />
+				
+				
+				<h:panelGroup>
+					<h:selectBooleanCheckbox value="#{marcaBean.domain.indicadorAtivo}" disabled= "#{marcaBean.disabledOnDefault}" />
+					<h:outputLabel value="Ativo?" styleClass="outputText"/>
+				</h:panelGroup>
+									
+				<h:inputText value="#{marcaBean.domain.codigo}" style="width:95%" disabled="#{marcaBean.disabledOnInsEdi}" >
+					<pxt:onlyNumber />
+				</h:inputText> 				
+				<h:inputText value="#{marcaBean.domain.descricao}" style="width:95%" maxlength="52" disabled="#{marcaBean.disabledOnDefault}" >
+					<pxt:upperCase />
+				</h:inputText> 
+
+			
+					
+			</pxt:panelGrid>
+		</ui:define>
+		
+		<ui:define name="colunasTabela" columnsWidth="10%;80%;10%">
+			<pxtfl:column headerValue="Código" value="#{obj.codigo}" />
+			<pxtfl:column headerValue="Descrição" value="#{obj.descricao}" />
+			<pxtfl:column headerValue="Status" value="#{obj.indicadorAtivo ? 'Ativo' : 'Inativo'}" />
+			
+		</ui:define>		
+	</ui:composition>
+</html>
