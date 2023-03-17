@@ -12,12 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "VITORSB.TLJPRODUTO")
-public class Produto implements Serializable{
+public class Produto implements Serializable {
 
-	
 	/**
 	 * 
 	 */
@@ -28,30 +26,32 @@ public class Produto implements Serializable{
 	@SequenceGenerator(name = "PRO_SEQ", sequenceName = "VITORSB.LJPRODUTO_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODPRO")
 	private Long codigoProduto;
-	
+
 	@Column(name = "DESPRO")
 	private String descricaoProduto;
-	
+
 	@Column(name = "TAMPRO")
 	private Double tamanhoProduto;
-	
-	@ManyToOne(targetEntity = Marca.class) // Vários produtos para 1 Marca
+
+	@ManyToOne(targetEntity = Marca.class)
+	// Vários produtos para 1 Marca
 	@JoinColumn(name = "CODMRC", referencedColumnName = "CODMRC")
 	private Marca marca;
-	
-	@ManyToOne(targetEntity = Fornecedor.class) // Vários produtos para 1 Fornecedor
+
+	@ManyToOne(targetEntity = Fornecedor.class)
+	// Vários produtos para 1 Fornecedor
 	@JoinColumn(name = "CODFRN", referencedColumnName = "CODFRN")
 	private Fornecedor fornecedor;
-	
+
 	@Column(name = "MDLPRO")
 	private String modeloProduto;
-	
+
 	@Column(name = "CTGPRO")
 	private String categoriaProduto;
-	
+
 	@Column(name = "CORPRO")
 	private String corProduto;
-	
+
 	@Column(name = "INDATV")
 	private Boolean indicadorAtivo = true;
 
@@ -79,19 +79,44 @@ public class Produto implements Serializable{
 		this.tamanhoProduto = tamanhoProduto;
 	}
 
+	
+	
 	public Marca getMarca() {
 		return marca;
 	}
-
+	
 	public void setMarca(Marca marca) {
 		this.marca = marca;
 	}
 
+	public Marca getMarcaNaoNulo() {
+		if (this.marca == null) {
+			return new Marca();
+		}
+		return getMarca();
+	}
+
+	public void setMarcaNaoNulo(Marca marca) {
+		this.marca = marca;
+	}
+
+	
 	public Fornecedor getFornecedor() {
 		return fornecedor;
 	}
-
+	
 	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public Fornecedor getFornecedorNaoNulo() {
+		if (this.fornecedor == null) {
+			return new Fornecedor();
+		}
+		return getFornecedor();
+	}
+
+	public void setFornecedorNaoNulo(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
 	}
 
@@ -221,8 +246,4 @@ public class Produto implements Serializable{
 				+ indicadorAtivo + "]";
 	}
 
-
-	
-	
-	
 }

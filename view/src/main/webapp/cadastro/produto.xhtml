@@ -12,48 +12,110 @@
 	
 		<ui:define name="panelCadastro">
 			
-			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="8%;30%;8%;15%;15%;18%;6%" width="100%">
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="3%;15%;3%;8%;8%;8%;8%;8%;5%" width="100%">
 				<h:outputLabel value="Código:" styleClass="outputText" />
 				<h:outputLabel value="Descrição:" styleClass="outputText" />
 				<h:outputLabel value="Tamanho:" styleClass="outputText" />
+				<h:outputLabel value="Fornecedor:" styleClass="outputText" />
+				<h:outputLabel value="Marca:" styleClass="outputText" />
 				<h:outputLabel value="Modelo:" styleClass="outputText" />
 				<h:outputLabel value="Categoria:" styleClass="outputText" />
 				<h:outputLabel value="Cor:" styleClass="outputText" />
-				
 				
 				<h:panelGroup>
 					<h:selectBooleanCheckbox value="#{produtoBean.domain.indicadorAtivo}" disabled= "#{produtoBean.disabledOnDefault}" />
 					<h:outputLabel value="Ativo?" styleClass="outputText"/>
 				</h:panelGroup>
-									
-				<h:inputText value="#{produtoBean.domain.codigoProduto}" style="width:95%" disabled="#{produtoBean.disabledOnInsEdi}" >
+											
+				<h:inputText value="#{produtoBean.domain.codigoProduto}" style="width:80%" disabled="#{produtoBean.disabledOnInsEdi}" >
 					<pxt:onlyNumber />
 				</h:inputText> 				
 				<h:inputText value="#{produtoBean.domain.descricaoProduto}" style="width:95%" maxlength="52" disabled="#{produtoBean.disabledOnDefault}" >
 					<pxt:upperCase />
 				</h:inputText> 
-				<h:inputText value="#{produtoBean.domain.tamanhoProduto}" style="width:95%" maxlength="5" disabled="#{produtoBean.disabledOnDefault}" >
+
+				<h:inputText value="#{produtoBean.domain.tamanhoProduto}" style="width:60%" maxlength="5" disabled="#{produtoBean.disabledOnDefault}" >
 					<pxt:onlyNumber />
-				</h:inputText>
-				<h:inputText value="#{produtoBean.domain.modeloProduto}" style="width:95%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
+				</h:inputText> 
+				
+				<pxtfl:searchField value="Pesquisar" id="searchFornecedor" searchProperty="nome" controller="#{produtoBean.searchFornecedor}" modalTitle="Fornecedor" disabledOn="#{produtoBean.disabledOnDefault}" width="80%">
+					<ui:define name="filtros">
+						<pxt:panelGrid columnsWidth="10%;90%">
+							<h:outputText value="Código:" styleClass="outputText" />
+							<h:inputText
+								value="#{produtoBean.searchFornecedor.searchObject.codigo}" style="width: 15%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+							<h:outputText value="Nome:" styleClass="outputText" />
+							<h:inputText
+								value="#{produtoBean.searchFornecedor.searchObject.nome}" style="width: 100%;">
+								<pxt:upperCase />
+							</h:inputText>
+							
+							<h:outputText value="CNPJ:" styleClass="outputText" />
+							<h:inputText
+								value="#{produtoBean.searchFornecedor.searchObject.cnpj}" style="width: 100%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+						</pxt:panelGrid>
+					</ui:define>
+					<ui:define name="colunas">
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
+							columnWidth="10%" />
+						<pxtfl:column headerValue="Nome" value="#{obj.nome}"
+							columnWidth="80%" />
+						<pxtfl:column headerValue="CNPJ" value="#{obj.cnpj}"
+							columnWidth="80%" />	
+					</ui:define>
+				</pxtfl:searchField>
+
+				<pxtfl:searchField value="Pesquisar" id="searchMarca" searchProperty="descricao" controller="#{produtoBean.searchMarca}" modalTitle="Marca" disabledOn="#{produtoBean.disabledOnDefault}" width="80%">
+					<ui:define name="filtros">
+						<pxt:panelGrid columnsWidth="10%;90%">
+							<h:outputText value="Código:" styleClass="outputText" />
+							<h:inputText
+								value="#{produtoBean.searchMarca.searchObject.codigo}" style="width: 15%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+							<h:outputText value="Descrição:" styleClass="outputText" />
+							<h:inputText
+								value="#{produtoBean.searchMarca.searchObject.descricao}" style="width: 100%;">
+								<pxt:upperCase />
+							</h:inputText>
+							
+						</pxt:panelGrid>
+					</ui:define>
+					<ui:define name="colunas">
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
+							columnWidth="10%" />
+						<pxtfl:column headerValue="Descrição" value="#{obj.descricao}"
+							columnWidth="80%" />
+					</ui:define>
+				</pxtfl:searchField>
+			
+				<h:inputText value="#{produtoBean.domain.modeloProduto}" style="width:80%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
 					<pxt:upperCase />
 				</h:inputText> 
-				<h:inputText value="#{produtoBean.domain.categoriaProduto}" style="width:95%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
+				<h:inputText value="#{produtoBean.domain.categoriaProduto}" style="width:80%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
 					<pxt:upperCase />
 				</h:inputText>
-				<h:inputText value="#{produtoBean.domain.corProduto}" style="width:95%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
+				<h:inputText value="#{produtoBean.domain.corProduto}" style="width:70%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
 					<pxt:upperCase />
 				</h:inputText> 	
-					 	 	
 			
-					
+
 			</pxt:panelGrid>
 		</ui:define>
 		
 		<ui:define name="colunasTabela" columnsWidth="10%;90%">
 			<pxtfl:column headerValue="Código" value="#{obj.codigoProduto}" />
 			<pxtfl:column headerValue="Descrição" value="#{obj.descricaoProduto}" />
+			<pxtfl:column headerValue="Fornecedor" value="#{obj.fornecedor.nome}" />
 			<pxtfl:column headerValue="Tamanho" value="#{obj.tamanhoProduto}" />
+			<pxtfl:column headerValue="Marca" value="#{obj.marca.descricao}" />
 			<pxtfl:column headerValue="Modelo" value="#{obj.modeloProduto}" />
 			<pxtfl:column headerValue="Categoria" value="#{obj.categoriaProduto}" />
 			<pxtfl:column headerValue="Cor" value="#{obj.corProduto}" />

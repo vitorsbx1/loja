@@ -15,7 +15,7 @@
 			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="20%;50%;20%;10%" width="100%">
 				<h:outputLabel value="Código:" styleClass="outputText" />
 				<h:outputLabel value="Nome:" styleClass="outputText" />
-				<h:outputLabel value="CPF:" styleClass="outputText" />
+				<h:outputLabel value="CNPJ:" styleClass="outputText" />
 				
 				
 				<h:panelGroup>
@@ -26,10 +26,11 @@
 				<h:inputText value="#{fornecedorBean.domain.codigo}" style="width:95%" disabled="#{fornecedorBean.disabledOnInsEdi}" >
 					<pxt:onlyNumber />
 				</h:inputText> 				
-				<h:inputText value="#{fornecedorBean.domain.descricao}" style="width:95%" maxlength="52" disabled="#{fornecedorBean.disabledOnDefault}" >
+				<h:inputText value="#{fornecedorBean.domain.nome}" style="width:95%" maxlength="52" disabled="#{fornecedorBean.disabledOnDefault}" >
 					<pxt:upperCase />
 				</h:inputText> 
-				<h:inputText value="#{fornecedorBean.domain.cpf}" style="width:95%" maxlength="14" disabled="#{fornecedorBean.disabledOnDefault}" >
+				<h:inputText value="#{fornecedorBean.domain.cnpj}" style="width:95%" maxlength="14" disabled="#{fornecedorBean.disabledOnDefault}" >
+					<f:validateLength minimum="14"></f:validateLength>
 					<pxt:onlyNumber />
 				</h:inputText> 		
 			
@@ -39,8 +40,8 @@
 		
 		<ui:define name="colunasTabela" columnsWidth="10%;70%;10%;10%">
 			<pxtfl:column headerValue="Código" value="#{obj.codigo}" />
-			<pxtfl:column headerValue="Nome" value="#{obj.descricao}" />
-			<pxtfl:column headerValue="CPF" value="#{obj.cpf}" />
+			<pxtfl:column headerValue="Nome" value="#{obj.nome}" />
+			<pxtfl:column headerValue="CNPJ" value="#{obj.cnpj}" />
 			<pxtfl:column headerValue="Status" value="#{obj.indicadorAtivo ? 'Ativo' : 'Inativo'}" />
 			
 		</ui:define>		

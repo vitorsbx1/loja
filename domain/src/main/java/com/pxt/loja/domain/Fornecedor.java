@@ -27,10 +27,10 @@ public class Fornecedor implements Serializable{
 	private Long codigo;
 	
 	@Column(name = "DESNOM")
-	private String descricao;
+	private String nome;
 	
-	@Column(name = "CPF")
-	private String cpf;
+	@Column(name = "CNPJ")
+	private String cnpj;
 
 	@Column(name = "INDATV")
 	private Boolean indicadorAtivo = true;
@@ -43,20 +43,20 @@ public class Fornecedor implements Serializable{
 		this.codigo = codigo;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	public String getCpf() {
-		return cpf;
+	public String getCnpj() {
+		return cnpj;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
 	}
 
 	public Boolean getIndicadorAtivo() {
@@ -69,8 +69,8 @@ public class Fornecedor implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Fornecedor [codigo=" + codigo + ", descricao=" + descricao
-				+ ", cpf=" + cpf + ", indicadorAtivo=" + indicadorAtivo + "]";
+		return "Fornecedor [codigo=" + codigo + ", nome=" + nome
+				+ ", cpf=" + cnpj + ", indicadorAtivo=" + indicadorAtivo + "]";
 	}
 
 	@Override
@@ -78,9 +78,9 @@ public class Fornecedor implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+		result = prime * result + ((cnpj == null) ? 0 : cnpj.hashCode());
 		result = prime * result
-				+ ((descricao == null) ? 0 : descricao.hashCode());
+				+ ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result
 				+ ((indicadorAtivo == null) ? 0 : indicadorAtivo.hashCode());
 		return result;
@@ -100,15 +100,15 @@ public class Fornecedor implements Serializable{
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (cpf == null) {
-			if (other.cpf != null)
+		if (cnpj == null) {
+			if (other.cnpj != null)
 				return false;
-		} else if (!cpf.equals(other.cpf))
+		} else if (!cnpj.equals(other.cnpj))
 			return false;
-		if (descricao == null) {
-			if (other.descricao != null)
+		if (nome == null) {
+			if (other.nome != null)
 				return false;
-		} else if (!descricao.equals(other.descricao))
+		} else if (!nome.equals(other.nome))
 			return false;
 		if (indicadorAtivo == null) {
 			if (other.indicadorAtivo != null)
