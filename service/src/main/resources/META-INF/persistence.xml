@@ -13,6 +13,8 @@
 		<class>com.pxt.loja.domain.Fornecedor</class>
 		<class>com.pxt.loja.domain.Marca</class>
 		<class>com.pxt.loja.domain.Cliente</class>
+		<class>com.pxt.loja.domain.Estoque</class>
+		<class>com.pxt.loja.domain.MovimentacaoEstoque</class>
 
 		<properties>
 			<property name="hibernate.show_sql" value="true" />

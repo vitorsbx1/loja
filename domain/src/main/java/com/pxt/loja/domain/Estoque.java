@@ -1,4 +1,4 @@
-/*package com.pxt.loja.domain;
+package com.pxt.loja.domain;
 
 import java.io.Serializable;
 
@@ -13,13 +13,18 @@ import javax.persistence.Table;
 @Table(name = "VITORSB.TLJESTOQUE")
 public class Estoque implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@OneToOne// Um estoque para um Produto
 	@JoinColumn(name = "CODPRO", referencedColumnName = "CODPRO")
 	private Produto produto;
 	
 	@Column(name = "QDEPRO")
-	private Integer quantidadeProduto;
+	private Integer quantidadeProduto = 0;
 	
 	@Column(name = "QDERSV")
 	private Integer quantidadeReserva;
@@ -34,6 +39,18 @@ public class Estoque implements Serializable{
 	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
+	
+	public Produto getProdutoNaoNulo() {
+		if(this.produto == null){
+			return new Produto();
+		}
+		return getProduto();
+	}
+	
+	public void setProdutoNaoNulo(Produto produto) {
+		this.produto = produto;
+	}
+	
 
 	public Integer getQuantidadeProduto() {
 		return quantidadeProduto;
@@ -123,4 +140,3 @@ public class Estoque implements Serializable{
 	
 
 }
-*/

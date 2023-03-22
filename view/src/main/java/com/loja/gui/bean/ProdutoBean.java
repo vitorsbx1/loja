@@ -7,11 +7,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import pxt.framework.business.PersistenceService;
+import pxt.framework.business.TransactionException;
 import pxt.framework.faces.controller.CrudController;
 import pxt.framework.faces.controller.SearchFieldController;
 import pxt.framework.faces.exception.CrudException;
+import pxt.framework.validation.ValidationException;
 
 import com.pxt.loja.business.impl.CadastroBO;
+import com.pxt.loja.domain.Estoque;
 import com.pxt.loja.domain.Fornecedor;
 import com.pxt.loja.domain.Marca;
 import com.pxt.loja.domain.Produto;
@@ -25,8 +28,7 @@ public class ProdutoBean extends CrudController<Produto> {
 	 */
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private SearchFieldController<Marca> searchMarca;
 	private SearchFieldController<Fornecedor> searchFornecedor;
 
@@ -34,10 +36,9 @@ public class ProdutoBean extends CrudController<Produto> {
 
 	@EJB
 	private PersistenceService persistenceService;
-	
+
 	@EJB
 	private CadastroBO cadastroBO;
-	
 
 	@Override
 	public Produto getDomain() {
@@ -67,9 +68,15 @@ public class ProdutoBean extends CrudController<Produto> {
 
 	}
 
+	@Override
+	protected void limparCampos() {
+		super.limparCampos();
+	}
+
 	public SearchFieldController<Marca> getSearchMarca() {
 		if (searchMarca == null) {
-			searchMarca = new SearchFieldController<Marca>(getPersistenceService()) {
+			searchMarca = new SearchFieldController<Marca>(
+					getPersistenceService()) {
 
 				/**
 				 * 
@@ -85,22 +92,22 @@ public class ProdutoBean extends CrudController<Produto> {
 				public Marca getObject() {
 					return getDomain().getMarcaNaoNulo();
 				}
-				
+
 				@Override
 				public void buscar() throws Exception {
-					setResultList((List<Marca>)persistenceService.findByExample(((Marca)getSearchObject())));
+					setResultList((List<Marca>) persistenceService
+							.findByExample(((Marca) getSearchObject())));
 				}
 
 			};
 		}
 		return searchMarca;
 	}
-	
-	
-	
+
 	public SearchFieldController<Fornecedor> getSearchFornecedor() {
 		if (searchFornecedor == null) {
-			searchFornecedor = new SearchFieldController<Fornecedor>(getPersistenceService()) {
+			searchFornecedor = new SearchFieldController<Fornecedor>(
+					getPersistenceService()) {
 
 				/**
 				 * 
@@ -116,12 +123,13 @@ public class ProdutoBean extends CrudController<Produto> {
 				public Fornecedor getObject() {
 					return getDomain().getFornecedorNaoNulo();
 				}
-				
+
 				@Override
 				public void buscar() throws Exception {
-					setResultList((List<Fornecedor>)persistenceService.findByExample(((Fornecedor)getSearchObject())));
+					setResultList((List<Fornecedor>) persistenceService
+							.findByExample(((Fornecedor) getSearchObject())));
 				}
-				
+
 				@Override
 				public void limpar() {
 					super.limpar();
@@ -131,5 +139,22 @@ public class ProdutoBean extends CrudController<Produto> {
 		}
 		return searchFornecedor;
 	}
+
+	@Override
+	protected void salvar() throws TransactionException {
+		Estoque estoque = new Estoque();
+		estoque.setProduto(getDomain());
+		estoque.setQuantidadeProduto(0);
+		estoque.setQuantidadeRecebimento(0);
+		estoque.setQuantidadeReserva(0);
+		try {
+			persistenceService.save(getDomain());
+			persistenceService.save(estoque);
+		} catch (ValidationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 
 }
