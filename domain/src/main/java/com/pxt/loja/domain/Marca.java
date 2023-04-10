@@ -1,6 +1,7 @@
 package com.pxt.loja.domain;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,18 +14,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "VITORSB.TLJMARCA")
 public class Marca implements Serializable{
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MRC_SEQ")
 	@SequenceGenerator(name = "MRC_SEQ", sequenceName = "VITORSB.LJMARCA_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODMRC")
-	private Long codigo;
+	private Integer codigo;
 	
 	@Column(name = "DESMRC")
 	private String descricao;
@@ -32,20 +31,27 @@ public class Marca implements Serializable{
 	@Column(name = "INDATV")
 	private Boolean indicadorAtivo = true;
 
-	public Long getCodigo() {
+	
+	public Integer getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
 
 	public String getDescricao() {
-		return descricao;
+	    return descricao;
 	}
 
 	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+		if(descricao != null){
+			descricao = descricao.trim(); // remove espaços em branco extras no início e no final
+			descricao  = Normalizer.normalize(descricao, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  // Remove os acentos "á" to "a"
+			descricao = descricao.replaceAll("\\p{M}", ""); // Remove qualquer coisa que não seja letra ou numero"
+			descricao = descricao.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit} ªº]", "").trim(); //remove tudo o que não for uma letra ou espaço em branco.
+	    }
+	    this.descricao = descricao;
 	}
 
 	public Boolean getIndicadorAtivo() {

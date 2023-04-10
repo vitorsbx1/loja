@@ -1,6 +1,8 @@
 package com.pxt.loja.domain;
 
 import java.io.Serializable;
+import java.text.Normalizer;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,9 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "VITORSB.TLJCLIENTE")
-public class Cliente implements Serializable{
-
-	
+public class Cliente implements Serializable{	
 	/**
 	 * 
 	 */
@@ -26,7 +26,7 @@ public class Cliente implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CLI_SEQ")
 	@SequenceGenerator(name = "CLI_SEQ", sequenceName = "VITORSB.LJCLIENTE_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODCLI")
-	private Long codigo;
+	private Integer codigo;
 	
 	@Column(name = "DESNOM")
 	private String nome;
@@ -38,14 +38,16 @@ public class Cliente implements Serializable{
 	@Column(name = "DATNAS")
 	private Date dataNascimento;
 	
+	
 	@Column(name = "INDATV")
 	private Boolean indicadorAtivo = true;
-
-	public Long getCodigo() {
+	
+	
+	public Integer getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
 
@@ -54,7 +56,14 @@ public class Cliente implements Serializable{
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+	    if(nome != null){
+	    	nome = nome.trim(); // remove espaços em branco extras no início e no final
+	        nome  = Normalizer.normalize(nome, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""); // Remove os acentos "á" to "a"
+	        nome = nome.replaceAll("\\p{M}", ""); // Remove qualquer coisa que não seja letra ou numero"
+	        nome = nome.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit} ªº]", "").trim(); //remove tudo o que não for uma letra ou espaço em branco.
+	        nome = nome.replaceAll("\\d", ""); // Remove números
+	    }
+	    this.nome = nome;
 	}
 
 	public String getCpfcnpj() {
@@ -62,6 +71,9 @@ public class Cliente implements Serializable{
 	}
 
 	public void setCpfcnpj(String cpfcnpj) {
+		if(cpfcnpj != null){
+			cpfcnpj = cpfcnpj.replaceAll("[.()'/-]","").replace(" ", "");
+		}
 		this.cpfcnpj = cpfcnpj;
 	}
 
@@ -80,7 +92,7 @@ public class Cliente implements Serializable{
 	public void setIndicadorAtivo(Boolean indicadorAtivo) {
 		this.indicadorAtivo = indicadorAtivo;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -138,9 +150,20 @@ public class Cliente implements Serializable{
 				+ cpfcnpj + ", dataNascimento=" + dataNascimento
 				+ ", indicadorAtivo=" + indicadorAtivo + "]";
 	}
-	
-
-	
-	
-	
+		 
+	public static boolean retornaIdadeEmAno(Date dataNascimento, Date dataAtualDate){
+		Calendar dataNascimentoCalendar = Calendar.getInstance();
+		dataNascimentoCalendar.setTime(dataNascimento);
+		Calendar dataAtualCalendar = Calendar.getInstance();
+		dataAtualCalendar.setTime(dataAtualDate);
+		
+		int anos = dataAtualCalendar.get(Calendar.YEAR) - dataNascimentoCalendar.get(Calendar.YEAR);
+		
+        if (dataAtualCalendar.get(Calendar.MONTH) < dataNascimentoCalendar.get(Calendar.MONTH) ||
+            (dataAtualCalendar.get(Calendar.MONTH) == dataNascimentoCalendar.get(Calendar.MONTH) &&
+             dataAtualCalendar.get(Calendar.DAY_OF_MONTH) < dataNascimentoCalendar.get(Calendar.DAY_OF_MONTH))) {
+            anos--;
+        }
+        return anos >= 18;
+	}
 }

@@ -7,16 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 
 @Entity
 @Table(name = "VITORSB.TLJMOVIMENTACAOETQ")
 public class MovimentacaoEstoque implements Serializable {
-	
 	/**
 	 * 
 	 */
@@ -24,6 +27,8 @@ public class MovimentacaoEstoque implements Serializable {
 
 	@Id
 	@Column(name = "CODMOV")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MOVETQ_SEQ")
+	@SequenceGenerator(name = "MOVETQ_SEQ", sequenceName = "VITORSB.LJMOVETQ_SEQ", initialValue = 1, allocationSize = 1)
 	private Long codigoMovimentacao;
 
 	@Column(name = "DATMOV")
@@ -34,12 +39,14 @@ public class MovimentacaoEstoque implements Serializable {
 	private Produto produto;
 	
 	@Column(name = "QDEMOV")
+	@Min(value = 0, message = "A quantidade deve ser positivo!")
 	private Integer quantidadeMovimentacao;
 	
 	@Column(name = "DESOPE")
 	@Enumerated(EnumType.STRING)
 	private TipoOperacao tipoOperacao;
 
+	
 	public Long getCodigoMovimentacao() {
 		return codigoMovimentacao;
 	}
@@ -63,6 +70,18 @@ public class MovimentacaoEstoque implements Serializable {
 	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
+	
+	public Produto getProdutoNaoNulo() {
+		if(this.produto == null){
+			return new Produto();
+		}
+		return getProduto();
+	}
+	
+	public void setProdutoNaoNulo(Produto produto) {
+		this.produto = produto;
+	}
+	
 
 	public Integer getQuantidadeMovimentacao() {
 		return quantidadeMovimentacao;
@@ -143,7 +162,5 @@ public class MovimentacaoEstoque implements Serializable {
 				+ quantidadeMovimentacao + ", tipoOperacao=" + tipoOperacao
 				+ "]";
 	}
-	
-	
 	
 }

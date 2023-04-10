@@ -3,27 +3,36 @@ package com.loja.gui.bean;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 
 import pxt.framework.business.PersistenceService;
+import pxt.framework.business.TransactionException;
 import pxt.framework.faces.controller.CrudController;
-import pxt.framework.faces.exception.CrudException;
+import pxt.framework.faces.controller.CrudState;
+import pxt.framework.persistence.PersistenceException;
+import pxt.framework.validation.ValidationException;
 
+import com.pxt.loja.business.impl.FornecedorBO;
 import com.pxt.loja.domain.Fornecedor;
 
 
 @ManagedBean
 @ViewScoped
 public class FornecedorBean extends CrudController<Fornecedor>{
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Fornecedor domain;
+	
 	@EJB
 	private PersistenceService persistenceService;
-
+	
+	@EJB
+	private FornecedorBO fornecedorBO;
+	
+	
 	@Override
 	public Fornecedor getDomain() {
 		if(domain == null){
@@ -42,13 +51,67 @@ public class FornecedorBean extends CrudController<Fornecedor>{
 	public PersistenceService getPersistenceService() {
 		return persistenceService;
 	}
+
+	protected void valida() throws ValidationException, PersistenceException {
+		
+		if(getDomain().getNome() == null || getDomain().getNome().isEmpty()){
+			throw new ValidationException("O Nome é um campo obrigatório");
+		}
+		if(getDomain().getCnpj() == null || getDomain().getCnpj().isEmpty()){
+			throw new ValidationException("O CNPJ é um campo obrigatório");
+		}
+		if(getDomain().getCnpj().length() != 14){
+			throw new ValidationException("CNPJ inválido! Necessário inserir 14 números para CNPJ");
+		}
+		if(fornecedorBO.validaCnpj(getDomain().getCnpj()) == true){
+			throw new ValidationException("CNPJ já existente! Cadastre outro.");
+		}
+	}
+
+	@Override
+	protected void buscar() throws TransactionException {
+		try{
+		
+			setListagem(fornecedorBO.buscar(getDomain()));
+			if(getListagem().isEmpty()){
+				msgWarn("Nenhum Fornecedor encontrado na pesquisa!");
+			}
+		}catch(PersistenceException e){
+			e.printStackTrace();
+			msgError(e, e.getMessage());
+		}
+	}
 	
 	@Override
-	protected void antesSalvar() throws CrudException {
-		if(getDomain().getNome() == null || getDomain().getNome().isEmpty()){
-			throw new CrudException("A descrição é um campo obrigatório");
+	public void salvar(ActionEvent arg0) {
+		try{
+			if(getEstadoCrud() == CrudState.ST_INSERT){
+				valida();
+				fornecedorBO.salvarObjeto(getDomain());
+				addToList(getDomain());
+				msgInfo("Salvo com sucesso!");
+			}
+			if(getEstadoCrud() == CrudState.ST_EDIT){
+				valida();
+				fornecedorBO.salvarObjeto(getDomain());
+				getListagem().clear();
+				addToList(getDomain());
+				msgInfo("Alterado com sucesso!");
+			}
+			if(getEstadoCrud() == CrudState.ST_DEFAULT){
+				getListagem().clear();
+			}
+			
 		}
-		super.antesSalvar();
+		catch(TransactionException e){
+			msgWarn(e.getMessage());
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			msgWarn(e.getMessage());
+		}
+		catch(PersistenceException e){
+			e.printStackTrace();
+		}
 	}
 
 }

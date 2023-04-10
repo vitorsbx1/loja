@@ -10,35 +10,29 @@
 		<ui:param name="backingBean" value="#{marcaBean}" />
 		<ui:param name="titulo" value="Marca" />
 	
-		<ui:define name="panelCadastro">
-			
-			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="30%;60%;10%" width="100%">
+		<ui:define name="panelCadastro">			
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="20%;70%;10%" width="60%">
 				<h:outputLabel value="Código:" styleClass="outputText" />
-				<h:outputLabel value="Descrição:" styleClass="outputText" />
-				
-				
-				<h:panelGroup>
-					<h:selectBooleanCheckbox value="#{marcaBean.domain.indicadorAtivo}" disabled= "#{marcaBean.disabledOnDefault}" />
-					<h:outputLabel value="Ativo?" styleClass="outputText"/>
-				</h:panelGroup>
+				<h:outputLabel value="Descrição:" styleClass="outputText" />	
+				<h:outputLabel value="" styleClass="outputText" />				
 									
-				<h:inputText value="#{marcaBean.domain.codigo}" style="width:95%" disabled="#{marcaBean.disabledOnInsEdi}" >
+				<h:inputText value="#{marcaBean.domain.codigo}" style="width:90%" maxlength="7" disabled="#{marcaBean.disabledOnInsEdi}" >
 					<pxt:onlyNumber />
 				</h:inputText> 				
-				<h:inputText value="#{marcaBean.domain.descricao}" style="width:95%" maxlength="52" disabled="#{marcaBean.disabledOnDefault}" >
+				<h:inputText value="#{marcaBean.domain.descricao}" style="width:98%" maxlength="100" disabled="#{marcaBean.disabledOnDefault}" >
 					<pxt:upperCase />
-				</h:inputText> 
-
-			
-					
+				</h:inputText> 	
+				<h:panelGroup>
+					<h:selectBooleanCheckbox value="#{marcaBean.domain.indicadorAtivo}" disabled="#{marcaBean.disabledOnDefault}" />
+					<h:outputLabel value="Ativo?" styleClass="outputText"/>
+				</h:panelGroup>				
 			</pxt:panelGrid>
 		</ui:define>
 		
-		<ui:define name="colunasTabela" columnsWidth="10%;80%;10%">
-			<pxtfl:column headerValue="Código" value="#{obj.codigo}" />
+		<ui:define name="colunasTabela">
+			<pxtfl:column headerValue="Código" value="#{obj.codigo}" columnWith="10%"/>
 			<pxtfl:column headerValue="Descrição" value="#{obj.descricao}" />
-			<pxtfl:column headerValue="Status" value="#{obj.indicadorAtivo ? 'Ativo' : 'Inativo'}" />
-			
+			<pxtfl:column headerValue="Situação" value="#{obj.indicadorAtivo ? 'Ativo' : 'Inativo'}" />			
 		</ui:define>		
 	</ui:composition>
 </html>

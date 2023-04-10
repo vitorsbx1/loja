@@ -1,6 +1,7 @@
 package com.pxt.loja.domain;
 
 import java.io.Serializable;
+import java.text.Normalizer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,18 +14,16 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "VITORSB.TLJFORNECEDOR")
 public class Fornecedor implements Serializable{
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FRN_SEQ")
 	@SequenceGenerator(name = "FRN_SEQ", sequenceName = "VITORSB.LJFORNECEDOR_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODFRN")
-	private Long codigo;
+	private Integer codigo;
 	
 	@Column(name = "DESNOM")
 	private String nome;
@@ -35,11 +34,12 @@ public class Fornecedor implements Serializable{
 	@Column(name = "INDATV")
 	private Boolean indicadorAtivo = true;
 
-	public Long getCodigo() {
+	
+	public Integer getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
 
@@ -48,7 +48,14 @@ public class Fornecedor implements Serializable{
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		if(nome != null){
+			nome = nome.trim(); // remove espaços em branco extras no início e no final
+	        nome  = Normalizer.normalize(nome, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""); // Remove os acentos "á" to "a"
+	        nome = nome.replaceAll("\\p{M}", ""); // Remove qualquer coisa que não seja letra ou numero"
+	        nome = nome.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit} ªº]", "").trim(); //remove tudo o que não for uma letra ou espaço em branco.
+	        nome = nome.replaceAll("\\d", ""); // Remove números
+	    }
+	    this.nome = nome;
 	}
 
 	public String getCnpj() {
@@ -56,6 +63,9 @@ public class Fornecedor implements Serializable{
 	}
 
 	public void setCnpj(String cnpj) {
+		if(cnpj != null){
+			cnpj = cnpj.replaceAll("[.()'/-]","").replace(" ", "");
+		}
 		this.cnpj = cnpj;
 	}
 

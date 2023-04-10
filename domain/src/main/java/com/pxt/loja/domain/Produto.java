@@ -1,6 +1,8 @@
 package com.pxt.loja.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.Normalizer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,11 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "VITORSB.TLJPRODUTO")
 public class Produto implements Serializable {
-
 	/**
 	 * 
 	 */
@@ -25,13 +27,13 @@ public class Produto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRO_SEQ")
 	@SequenceGenerator(name = "PRO_SEQ", sequenceName = "VITORSB.LJPRODUTO_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODPRO")
-	private Long codigoProduto;
+	private Integer codigoProduto;
 
 	@Column(name = "DESPRO")
 	private String descricaoProduto;
 
 	@Column(name = "TAMPRO")
-	private Double tamanhoProduto;
+	private Float tamanhoProduto;
 
 	@ManyToOne(targetEntity = Marca.class)
 	// Vários produtos para 1 Marca
@@ -55,11 +57,16 @@ public class Produto implements Serializable {
 	@Column(name = "INDATV")
 	private Boolean indicadorAtivo = true;
 
-	public Long getCodigoProduto() {
+	@Column(name = "VLRPRO")
+	@Min(value = 0, message = "O valor deve ser positivo!")
+	private BigDecimal valor;
+
+	
+	public Integer getCodigoProduto() {
 		return codigoProduto;
 	}
 
-	public void setCodigoProduto(Long codigoProduto) {
+	public void setCodigoProduto(Integer codigoProduto) {
 		this.codigoProduto = codigoProduto;
 	}
 
@@ -68,25 +75,29 @@ public class Produto implements Serializable {
 	}
 
 	public void setDescricaoProduto(String descricaoProduto) {
-		this.descricaoProduto = descricaoProduto;
+		if(descricaoProduto != null){
+			descricaoProduto = descricaoProduto.trim(); // remove espaços em branco extras no início e no final
+			descricaoProduto  = Normalizer.normalize(descricaoProduto, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+			descricaoProduto = descricaoProduto.replaceAll("\\p{M}", "");
+			descricaoProduto = descricaoProduto.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit} ªº]", "").trim();
+	    }
+	    this.descricaoProduto = descricaoProduto;
 	}
 
-	public Double getTamanhoProduto() {
+	public Float getTamanhoProduto() {
 		return tamanhoProduto;
 	}
 
-	public void setTamanhoProduto(Double tamanhoProduto) {
+	public void setTamanhoProduto(Float tamanhoProduto) {
 		this.tamanhoProduto = tamanhoProduto;
 	}
 
-	
-	
 	public Marca getMarca() {
 		return marca;
 	}
-	
+
 	public void setMarca(Marca marca) {
-		this.marca = marca;
+	    this.marca = marca;
 	}
 
 	public Marca getMarcaNaoNulo() {
@@ -100,11 +111,10 @@ public class Produto implements Serializable {
 		this.marca = marca;
 	}
 
-	
 	public Fornecedor getFornecedor() {
 		return fornecedor;
 	}
-	
+
 	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
 	}
@@ -125,7 +135,13 @@ public class Produto implements Serializable {
 	}
 
 	public void setModeloProduto(String modeloProduto) {
-		this.modeloProduto = modeloProduto;
+		if(modeloProduto != null){
+			modeloProduto = modeloProduto.trim(); // remove espaços em branco extras no início e no final
+			modeloProduto  = Normalizer.normalize(modeloProduto, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  // Remove os acentos "á" to "a"
+			modeloProduto = modeloProduto.replaceAll("\\p{M}", ""); // Remove qualquer coisa que não seja letra ou numero"
+			modeloProduto = modeloProduto.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit} ªº]", "").trim(); //remove tudo o que não for uma letra ou espaço em branco.
+	    }
+	    this.modeloProduto = modeloProduto;
 	}
 
 	public String getCategoriaProduto() {
@@ -133,7 +149,13 @@ public class Produto implements Serializable {
 	}
 
 	public void setCategoriaProduto(String categoriaProduto) {
-		this.categoriaProduto = categoriaProduto;
+		if(categoriaProduto != null){
+			categoriaProduto = categoriaProduto.trim(); // remove espaços em branco extras no início e no final
+			categoriaProduto  = Normalizer.normalize(categoriaProduto, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  // Remove os acentos "á" to "a"
+			categoriaProduto = categoriaProduto.replaceAll("\\p{M}", ""); // Remove qualquer coisa que não seja letra ou numero"
+			categoriaProduto = categoriaProduto.replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit} ªº]", "").trim(); //remove tudo o que não for uma letra ou espaço em branco.
+	    }
+	    this.categoriaProduto = categoriaProduto;
 	}
 
 	public String getCorProduto() {
@@ -150,6 +172,14 @@ public class Produto implements Serializable {
 
 	public void setIndicadorAtivo(Boolean indicadorAtivo) {
 		this.indicadorAtivo = indicadorAtivo;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
 	}
 
 	@Override
@@ -175,6 +205,7 @@ public class Produto implements Serializable {
 				+ ((modeloProduto == null) ? 0 : modeloProduto.hashCode());
 		result = prime * result
 				+ ((tamanhoProduto == null) ? 0 : tamanhoProduto.hashCode());
+		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
 
@@ -227,10 +258,12 @@ public class Produto implements Serializable {
 				return false;
 		} else if (!modeloProduto.equals(other.modeloProduto))
 			return false;
-		if (tamanhoProduto == null) {
-			if (other.tamanhoProduto != null)
+		if (tamanhoProduto != other.tamanhoProduto)
+			return false;
+		if (valor == null) {
+			if (other.valor != null)
 				return false;
-		} else if (!tamanhoProduto.equals(other.tamanhoProduto))
+		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
 	}
@@ -243,7 +276,7 @@ public class Produto implements Serializable {
 				+ ", fornecedor=" + fornecedor + ", modeloProduto="
 				+ modeloProduto + ", categoriaProduto=" + categoriaProduto
 				+ ", corProduto=" + corProduto + ", indicadorAtivo="
-				+ indicadorAtivo + "]";
+				+ indicadorAtivo + ", valor=" + valor + "]";
 	}
 
 }

@@ -5,33 +5,59 @@
 	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" xmlns:pxt="http://www.peixoto.com.br/pxtFaces"
 	xmlns:pxtfl="http://www.peixoto.com.br/jsf" xmlns:pxtfc="http://www.peixoto.com.br/jsf/core">
 
-	<ui:composition template="/META-INF/facelets/templates/crud.xhtml">
+	<ui:composition template="/META-INF/facelets/templates/search.xhtml">
 		<ui:param name="form_id" value="formMovimentacao" />
 		<ui:param name="backingBean" value="#{movimentacaoBean}" />
 		<ui:param name="titulo" value="Relatório de Movimentações" />
 	
-		<ui:define name="panelCadastro">
-			
-			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="100%" width="30%">
-		
+		<ui:define name="panelFiltro">
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="40%;25%;30%" width="70%">
+				<h:outputLabel value="Período:" styleClass="outputText" />
 				<h:outputLabel value="Operação:" styleClass="outputText" />
-													
+				<h:outputLabel value="Produto:" styleClass="outputText" />
+			
+			<h:panelGroup>
+				<rich:calendar value="#{movimentacaoBean.dataInicial}" datePattern="dd/MM/yyyy"/>
+				<h:outputText value=" a " styleClass="outputText"/>
+				<rich:calendar value="#{movimentacaoBean.dataFinal}" datePattern="dd/MM/yyyy"/>
+			</h:panelGroup>										
+			
 			<h:selectOneMenu value="#{movimentacaoBean.domain.tipoOperacao}" style="width:98%" converter="defaultConverter">
 				<f:selectItem itemLabel="" itemValue=""/>
 				<f:selectItems value="#{movimentacaoBean.tipoOperacoes}" var="obj" itemLabel="#{obj}"/>
 			</h:selectOneMenu>
 			
-				<pxt:cell>
-					<rich:calendar value="#{clienteBean.domain.dataNascimento}" disabled="#{clienteBean.disabledOnEdi}" datePattern="dd/MM/yyyy" inputStyle="width:40%"/>
-				</pxt:cell>
-			
+			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricaoProduto" controller="#{movimentacaoBean.searchProduto}" modalTitle="Produto" width="90%">
+					<ui:define name="filtros">
+						<pxt:panelGrid columnsWidth="10%;90%">
+							<h:outputText value="Código:" styleClass="outputText" />
+							<h:inputText
+								value="#{movimentacaoBean.searchProduto.searchObject.codigoProduto}" maxlength="7" style="width: 15%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+							<h:outputText value="Descrição:" styleClass="outputText" />
+							<h:inputText
+								value="#{movimentacaoBean.searchProduto.searchObject.descricaoProduto}" maxlength="100" style="width: 100%;">
+								<pxt:upperCase />
+							</h:inputText>
+						</pxt:panelGrid>
+					</ui:define>
+					<ui:define name="colunas">
+						<pxtfl:column headerValue="Código" value="#{obj.codigoProduto}"
+							columnWidth="10%" />
+						<pxtfl:column headerValue="Descrição" value="#{obj.descricaoProduto}"
+							columnWidth="80%" />
+					</ui:define>
+				</pxtfl:searchField>
 			</pxt:panelGrid>
 		</ui:define>
-		
-		<ui:define name="colunasTabela" columnsWidth="10%;40%;20%">
-			<pxtfl:column headerValue="Produto" value="#{obj.produto.descricaoProduto}" />
-			<pxtfl:column headerValue="Quantidade" value="#{obj.quantidadeRecebimento}" />
-			
+
+		<ui:define name="colunasTabela">
+			<pxtfl:column headerValue="Data Mov." value="#{obj.dataMovimentacao}" />
+			<pxtfl:column headerValue="Produto" value="#{obj.produto.codigoProduto} - #{obj.produto.descricaoProduto}" />
+			<pxtfl:column headerValue="Quantidade" value="#{obj.quantidadeMovimentacao}" />
+			<pxtfl:column headerValue="Tipo Operacao" value="#{obj.tipoOperacao}" />
 		</ui:define>		
 	</ui:composition>
 </html>

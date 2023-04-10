@@ -1,15 +1,17 @@
 package com.loja.gui.bean;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 
 import pxt.framework.business.PersistenceService;
-import pxt.framework.faces.controller.SearchController;
+import pxt.framework.business.TransactionException;
+import pxt.framework.faces.controller.CrudController;
+import pxt.framework.faces.controller.CrudState;
 import pxt.framework.faces.controller.SearchFieldController;
 import pxt.framework.persistence.PersistenceException;
 import pxt.framework.validation.ValidationException;
@@ -21,7 +23,8 @@ import com.pxt.loja.domain.TipoOperacao;
 
 @ManagedBean
 @ViewScoped
-public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
+public class MovimentacoesMercadoriaBean extends CrudController<MovimentacaoEstoque> {
+
 	/**
 	 * 
 	 */
@@ -32,18 +35,20 @@ public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
 	
 	@EJB
 	private MovimentacaoBO movimentacaoBO;
-
+	
 	private MovimentacaoEstoque domain;
-	
-	private List<TipoOperacao> tipoOperacoes;
-	
+
 	private SearchFieldController<Produto> searchProduto;
 	
-	Date dataInicial;
+	private List<TipoOperacao> tipoOperacoes;
+
+
+	@Override
+	public PersistenceService getPersistenceService() {
+		return persistenceService;
+	}
 	
-	Date dataFinal;
-	
-	
+	@Override
 	public MovimentacaoEstoque getDomain() {
 		if (domain == null) {
 			domain = new MovimentacaoEstoque();
@@ -51,44 +56,11 @@ public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
 		return domain;
 	}
 	
+	@Override
 	public void setDomain(MovimentacaoEstoque domain) {
 		this.domain = domain;
 	}
 	
-	public Date getDataInicial() {
-		return dataInicial;
-	}
-
-
-	public void setDataInicial(Date dataInicial) {
-		this.dataInicial = dataInicial;
-	}
-
-
-	public Date getDataFinal() {
-		return dataFinal;
-	}
-
-
-	public void setDataFinal(Date dataFinal) {
-		this.dataFinal = dataFinal;
-	}
-
-	public PersistenceService getPersistenceService() {
-		return persistenceService;
-	}
-	
-	/**
-	 * Obtém lista de MOVIMENTACOES de estoque
-	 * @return
-	 */
-	public List<TipoOperacao> getTipoOperacoes() {
-		if (tipoOperacoes == null) {
-			tipoOperacoes = Arrays.asList(TipoOperacao.values());
-		}
-		return tipoOperacoes;
-	}
-
 	public SearchFieldController<Produto> getSearchProduto() {
 		if (searchProduto == null) {
 			searchProduto = new SearchFieldController<Produto>(
@@ -124,41 +96,40 @@ public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
 		return this.searchProduto;
 	}
 	
-	protected void validarIntervaloDatas() throws ValidationException{
-		Long diferencaDatas = (getDataInicial().getTime() - getDataFinal().getTime()) / 86400000;
-		
-		if (diferencaDatas > 30){
-			throw new ValidationException("Inserir um intervalo de datas menor a 30 dias.");
+	public List<TipoOperacao> getTipoOperacoes() {
+		if (tipoOperacoes == null) {
+			tipoOperacoes = Arrays.asList(TipoOperacao.values());
 		}
+		return tipoOperacoes;
 	}
-	
-	protected void validarCampos() throws ValidationException{
-		if(getDataInicial() == null || getDataFinal() == null){
-			throw new ValidationException("Data Inicial e Data Final são obrigatórios.");
+
+	protected void validar() throws ValidationException, PersistenceException {
+		
+		if(getDomain().getProduto() == null){
+			throw new ValidationException("O Produto é um campo obrigatório");
 		}
-		if(getDataInicial().after(getDataFinal())){
-			throw new ValidationException("Data Inicial maior que Data Final");
+		if(getDomain().getQuantidadeMovimentacao() == null){
+			throw new ValidationException("Quantidade é um campo obrigatório");
 		}
-		validarIntervaloDatas();
+		if(getDomain().getTipoOperacao() == null){
+			throw new ValidationException("Operações é um campo obrigatório");
+		}
 	}
 	
 	@Override
-	protected void busca() {
+	public void salvar(ActionEvent arg0) {
 		try{
-			validarCampos();
-			List<MovimentacaoEstoque> listaMovimentacao = movimentacaoBO.buscarRelatorioMovimentacao(getDataInicial(), getDataFinal(), getDomain().getTipoOperacao(), getDomain().getProduto());
-			this.setListagem(listaMovimentacao);
-			if(getListagem().isEmpty()){
-				msgInfo("Nenhum registro encontrado");
-			}
-		}catch(PersistenceException e){
+			this.validar();
+			movimentacaoBO.salvarMovimentacaoEstoque(getDomain());
+			this.addToList(getDomain());
+			this.configuraEstado(CrudState.ST_DEFAULT);
+			msgInfo("Salvo com sucesso!");
+		}catch(PersistenceException | TransactionException e){
 			msgError(e, e.getMessage());
 		}catch(ValidationException e){
 			e.printStackTrace();
 			msgWarn(e.getMessage());
 		}
 	}
-
-
 
 }

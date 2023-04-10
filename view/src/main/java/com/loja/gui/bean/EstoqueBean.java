@@ -5,20 +5,23 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 
 import pxt.framework.business.PersistenceService;
 import pxt.framework.business.TransactionException;
 import pxt.framework.faces.controller.CrudController;
+import pxt.framework.faces.controller.CrudState;
 import pxt.framework.faces.controller.SearchFieldController;
+import pxt.framework.persistence.PersistenceException;
 
 import com.pxt.loja.business.impl.EstoqueBO;
+import com.pxt.loja.business.impl.MovimentacaoBO;
 import com.pxt.loja.domain.Estoque;
-import com.pxt.loja.domain.MovimentacaoEstoque;
 import com.pxt.loja.domain.Produto;
 
 @ManagedBean
 @ViewScoped
-public class RecebimentoMercadoriaBean extends CrudController<Estoque> {
+public class EstoqueBean extends CrudController<Estoque> {
 
 	/**
 	 * 
@@ -27,15 +30,17 @@ public class RecebimentoMercadoriaBean extends CrudController<Estoque> {
 
 	@EJB
 	private PersistenceService persistenceService;
-	
+
 	@EJB
 	private EstoqueBO estoqueBO;
 
+	@EJB
+	private MovimentacaoBO movimentacaoBO;
+	
 	private Estoque domain;
 
-	private MovimentacaoEstoque movimentacaoEstoque;
-
 	private SearchFieldController<Produto> searchProduto;
+
 	
 	@Override
 	public Estoque getDomain() {
@@ -45,25 +50,9 @@ public class RecebimentoMercadoriaBean extends CrudController<Estoque> {
 		return domain;
 	}
 
-
-
-	public MovimentacaoEstoque getMovimentacaoEstoque() {
-		if (movimentacaoEstoque == null) {
-			movimentacaoEstoque = new MovimentacaoEstoque();
-		}
-		return movimentacaoEstoque;
-	}
-	
-	public void setMovimentacaoEstoque(MovimentacaoEstoque movimentacaoEstoque) {
-		this.movimentacaoEstoque = movimentacaoEstoque;
-
-	}
-
-	
 	@Override
 	public void setDomain(Estoque domain) {
 		this.domain = domain;
-
 	}
 
 	@Override
@@ -71,16 +60,9 @@ public class RecebimentoMercadoriaBean extends CrudController<Estoque> {
 		return persistenceService;
 	}
 
-	@Override
-	protected void limparCampos() {
-		super.limparCampos();
-	}
-
-	
 	public SearchFieldController<Produto> getSearchProduto() {
 		if (searchProduto == null) {
 			searchProduto = new SearchFieldController<Produto>(getPersistenceService()) {
-
 				/**
 				 * 
 				 */
@@ -88,18 +70,19 @@ public class RecebimentoMercadoriaBean extends CrudController<Estoque> {
 
 				@Override
 				public void setObject(Produto produto) {
-					getDomain().setProdutoNaoNulo(produto);				}
+					getDomain().setProdutoNaoNulo(produto);
+				}
 
 				@Override
 				public Produto getObject() {
 					return getDomain().getProdutoNaoNulo();
 				}
-				
+
 				@Override
 				public void buscar() throws Exception {
-					setResultList((List<Produto>)persistenceService.findByExample(((Produto)getSearchObject())));
+					setResultList((List<Produto>) persistenceService.findByExample(((Produto) getSearchObject())));
 				}
-				
+
 				@Override
 				public void limpar() {
 					super.limpar();
@@ -109,10 +92,29 @@ public class RecebimentoMercadoriaBean extends CrudController<Estoque> {
 		}
 		return this.searchProduto;
 	}
-	
-	
+
 	@Override
-	protected void buscar() throws TransactionException {
-		setListagem(estoqueBO.buscarPorExemplo(getDomain()));
+	protected void buscar(){
+		
+		try{
+			List<Estoque> listaEstoque = estoqueBO.buscarPorExemplo(getDomain());
+			setListagem(listaEstoque);
+		
+		}catch(PersistenceException e){
+			msgError(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void salvar(ActionEvent event) {
+		try {
+			estoqueBO.salvarEstoque(getDomain());
+			this.addToList(getDomain());
+			this.configuraEstado(CrudState.ST_DEFAULT);
+			msgInfo("Registro salvo com sucesso!");
+		} catch (TransactionException e) {
+			msgError(e, e.getMessage());
+		}
 	}
 }

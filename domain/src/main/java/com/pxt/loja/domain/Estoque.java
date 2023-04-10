@@ -8,11 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "VITORSB.TLJESTOQUE")
 public class Estoque implements Serializable{
-	
 	/**
 	 * 
 	 */
@@ -24,14 +24,14 @@ public class Estoque implements Serializable{
 	private Produto produto;
 	
 	@Column(name = "QDEPRO")
-	private Integer quantidadeProduto = 0;
-	
-	@Column(name = "QDERSV")
-	private Integer quantidadeReserva;
+	@Min(value = 0, message = "A quantidade deve ser positivo!")
+	private Integer quantidadeProduto;
 	
 	@Column(name = "QDERCB")
+	@Min(value = 0, message = "A quantidade deve ser positivo!")
 	private Integer quantidadeRecebimento;
 
+	
 	public Produto getProduto() {
 		return produto;
 	}
@@ -51,7 +51,6 @@ public class Estoque implements Serializable{
 		this.produto = produto;
 	}
 	
-
 	public Integer getQuantidadeProduto() {
 		return quantidadeProduto;
 	}
@@ -60,20 +59,19 @@ public class Estoque implements Serializable{
 		this.quantidadeProduto = quantidadeProduto;
 	}
 
-	public Integer getQuantidadeReserva() {
-		return quantidadeReserva;
-	}
-
-	public void setQuantidadeReserva(Integer quantidadeReserva) {
-		this.quantidadeReserva = quantidadeReserva;
-	}
-
 	public Integer getQuantidadeRecebimento() {
 		return quantidadeRecebimento;
 	}
 
 	public void setQuantidadeRecebimento(Integer quantidadeRecebimento) {
 		this.quantidadeRecebimento = quantidadeRecebimento;
+	}
+
+	@Override
+	public String toString() {
+		return "Estoque [produto=" + produto + ", quantidadeProduto="
+				+ quantidadeProduto + ", quantidadeRecebimento="
+				+ quantidadeRecebimento + "]";
 	}
 
 	@Override
@@ -88,10 +86,6 @@ public class Estoque implements Serializable{
 		result = prime
 				* result
 				+ ((quantidadeRecebimento == null) ? 0 : quantidadeRecebimento
-						.hashCode());
-		result = prime
-				* result
-				+ ((quantidadeReserva == null) ? 0 : quantidadeReserva
 						.hashCode());
 		return result;
 	}
@@ -120,23 +114,10 @@ public class Estoque implements Serializable{
 				return false;
 		} else if (!quantidadeRecebimento.equals(other.quantidadeRecebimento))
 			return false;
-		if (quantidadeReserva == null) {
-			if (other.quantidadeReserva != null)
-				return false;
-		} else if (!quantidadeReserva.equals(other.quantidadeReserva))
-			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Estoque [produto=" + produto + ", quantidadeProduto="
-				+ quantidadeProduto + ", quantidadeReserva="
-				+ quantidadeReserva + ", quantidadeRecebimento="
-				+ quantidadeRecebimento + "]";
-	}
-	
-	
+
 	
 
 }
