@@ -143,6 +143,15 @@ public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
 	}
 	
 	@Override
+	protected void limpar() {
+		setDataInicial(null);
+		setDataFinal(null);
+		getDomain().setTipoOperacao(null);
+		searchProduto.limpar();
+		super.limpar();
+	}
+	
+	@Override
 	protected void busca() {
 		try{
 			validarCampos();
