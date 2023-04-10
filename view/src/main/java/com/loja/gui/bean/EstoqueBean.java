@@ -5,12 +5,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
 
 import pxt.framework.business.PersistenceService;
-import pxt.framework.business.TransactionException;
-import pxt.framework.faces.controller.CrudController;
-import pxt.framework.faces.controller.CrudState;
+import pxt.framework.faces.controller.SearchController;
 import pxt.framework.faces.controller.SearchFieldController;
 import pxt.framework.persistence.PersistenceException;
 
@@ -21,7 +18,7 @@ import com.pxt.loja.domain.Produto;
 
 @ManagedBean
 @ViewScoped
-public class EstoqueBean extends CrudController<Estoque> {
+public class EstoqueBean extends SearchController<Estoque> {
 
 	/**
 	 * 
@@ -42,7 +39,7 @@ public class EstoqueBean extends CrudController<Estoque> {
 	private SearchFieldController<Produto> searchProduto;
 
 	
-	@Override
+	
 	public Estoque getDomain() {
 		if (domain == null) {
 			domain = new Estoque();
@@ -50,12 +47,12 @@ public class EstoqueBean extends CrudController<Estoque> {
 		return domain;
 	}
 
-	@Override
+	
 	public void setDomain(Estoque domain) {
 		this.domain = domain;
 	}
 
-	@Override
+	
 	public PersistenceService getPersistenceService() {
 		return persistenceService;
 	}
@@ -94,27 +91,24 @@ public class EstoqueBean extends CrudController<Estoque> {
 	}
 
 	@Override
-	protected void buscar(){
-		
+	protected void limpar() {
+		searchProduto.limpar();
+		super.limpar();
+	}
+	
+	@Override
+	protected void busca(){	
 		try{
 			List<Estoque> listaEstoque = estoqueBO.buscarPorExemplo(getDomain());
 			setListagem(listaEstoque);
-		
+			if(getListagem().isEmpty()){
+				msgInfo("Nenhum registro encontrado.");;
+			}
 		}catch(PersistenceException e){
 			msgError(e, e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void salvar(ActionEvent event) {
-		try {
-			estoqueBO.salvarEstoque(getDomain());
-			this.addToList(getDomain());
-			this.configuraEstado(CrudState.ST_DEFAULT);
-			msgInfo("Registro salvo com sucesso!");
-		} catch (TransactionException e) {
-			msgError(e, e.getMessage());
-		}
-	}
+
 }

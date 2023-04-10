@@ -60,7 +60,7 @@
 		
 		<ui:define name="colunasTabela">	
 			<pxtfl:column headerValue="Cod. Movimentacao" value="#{obj.codigoMovimentacao}" />
-			<pxtfl:column headerValue="Data" value="#{obj.dataMovimentacao}" typeFormat="date" patternFormat="dd/MM/yyyy" maxWidth="110px"/>
+			<pxtfl:column headerValue="Data" value="#{obj.dataMovimentacao}" typeFormat="date" patternFormat="dd/MM/yyyy HH:mm:ss" maxWidth="110px"/>
 			<pxtfl:column headerValue="Produto" value="#{obj.produto.descricaoProduto}" />
 			<pxtfl:column headerValue="Tipo Operação" value="#{obj.tipoOperacao}" />
 			<pxtfl:column headerValue="Qtd. Movimentada" value="#{obj.quantidadeMovimentacao}" />
