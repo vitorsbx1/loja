@@ -19,14 +19,14 @@
 				<h:outputLabel value="Marca:" styleClass="outputText" />
 				<h:outputLabel value="" styleClass="outputText" />
 														
-				<h:inputText value="#{produtoBean.domain.codigoProduto}" maxlength="7" style="width:90%" disabled="#{produtoBean.disabledOnInsEdi}" >
+				<h:inputText value="#{produtoBean.domain.codigo}" maxlength="7" style="width:90%" disabled="#{produtoBean.disabledOnInsEdi}" tabindex="1">
 					<pxt:onlyNumber />
 				</h:inputText> 				
-				<h:inputText value="#{produtoBean.domain.descricaoProduto}" style="width:97%" maxlength="100" disabled="#{produtoBean.disabledOnDefault}" >
+				<h:inputText value="#{produtoBean.domain.descricao}" style="width:97%" maxlength="100" disabled="#{produtoBean.disabledOnDefault}" tabindex="2">
 					<pxt:upperCase />
 				</h:inputText> 
 
-				<pxtfl:searchField value="Pesquisar" id="searchFornecedor" searchProperty="nome" controller="#{produtoBean.searchFornecedor}" modalTitle="Fornecedor" disabledOn="#{produtoBean.disabledOnDefault}" width="98%">
+				<pxtfl:searchField value="Pesquisar" id="searchFornecedor" searchProperty="nome" controller="#{produtoBean.searchFornecedor}" modalTitle="Fornecedor" disabledOn="#{produtoBean.disabledOnDefault}" width="98%" tabindex="3">
 					<ui:define name="filtros">
 						<pxt:panelGrid columnsWidth="10%;90%">
 							<h:outputText value="Código:" styleClass="outputText" />
@@ -59,7 +59,7 @@
 					</ui:define>
 				</pxtfl:searchField>
 
-				<pxtfl:searchField value="Pesquisar" id="searchMarca" searchProperty="descricao" controller="#{produtoBean.searchMarca}" modalTitle="Marca" disabledOn="#{produtoBean.disabledOnDefault}" width="98%">
+				<pxtfl:searchField value="Pesquisar" id="searchMarca" searchProperty="descricao" controller="#{produtoBean.searchMarca}" modalTitle="Marca" disabledOn="#{produtoBean.disabledOnDefault}" width="98%" tabindex="4">
 					<ui:define name="filtros">
 						<pxt:panelGrid columnsWidth="10%;90%">
 							<h:outputText value="Código:" styleClass="outputText" />
@@ -84,7 +84,7 @@
 				</pxtfl:searchField>
 				
 				<h:panelGroup>
-					<h:selectBooleanCheckbox value="#{produtoBean.domain.indicadorAtivo}" disabled= "#{produtoBean.disabledOnDefault}" />
+					<h:selectBooleanCheckbox value="#{produtoBean.domain.indicadorAtivo}" disabled= "#{produtoBean.disabledOnDefault}" tabindex="5"/>
 					<h:outputLabel value="Ativo?" styleClass="outputText"/>
 				</h:panelGroup>
 			</pxt:panelGrid>
@@ -96,22 +96,22 @@
 				<h:outputLabel value="Cor:" styleClass="outputText" />
 				<h:outputLabel value="Valor:" styleClass="outputText" />
 				
-				<h:inputText value="#{produtoBean.domain.modeloProduto}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
+				<h:inputText value="#{produtoBean.domain.modelo}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" tabindex="6">
 					<pxt:upperCase />
 				</h:inputText> 
 					
-				<h:selectOneMenu value="#{produtoBean.domain.tamanhoProduto}" style="width:95%" converter="defaultConverter"  disabled="#{produtoBean.disabledOnDefault}">
+				<h:selectOneMenu value="#{produtoBean.domain.tamanho}" style="width:95%" converter="defaultConverter"  disabled="#{produtoBean.disabledOnDefault}" tabindex="7">
 					<f:selectItem itemLabel="" itemValue="" />
 					<f:selectItems value="#{produtoBean.numeracoes}" var="obj" itemLabel="#{obj}"/>
 				</h:selectOneMenu>
 				
-				<h:inputText value="#{produtoBean.domain.categoriaProduto}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
+				<h:inputText value="#{produtoBean.domain.categoria}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" tabindex="8">
 					<pxt:upperCase />
 				</h:inputText>
-				<h:inputText value="#{produtoBean.domain.corProduto}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" >
+				<h:inputText value="#{produtoBean.domain.cor}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" tabindex="9">
 					<pxt:upperCase />
 				</h:inputText> 	
-				<h:inputText value="#{produtoBean.domain.valor}" typeFormat="currency" style="width:65%" maxlength="9" disabled="#{produtoBean.disabledOnDefault}">
+				<h:inputText value="#{produtoBean.domain.valor}" typeFormat="currency" style="width:65%" maxlength="9" disabled="#{produtoBean.disabledOnDefault}" tabindex="10">
     				<pxt:onlyNumber />
     				<f:convertNumber minFractionDigits="2" maxFractionDigits="2" currencyCode="BRL" />
     				<pxt:convertCurrency />
@@ -121,14 +121,14 @@
 		</ui:define>
 		
 		<ui:define name="colunasTabela" >
-			<pxtfl:column headerValue="Código" value="#{obj.codigoProduto}" />
-			<pxtfl:column headerValue="Descrição" value="#{obj.descricaoProduto}" />
+			<pxtfl:column headerValue="Código" value="#{obj.codigo}" />
+			<pxtfl:column headerValue="Descrição" value="#{obj.descricao}" />
 			<pxtfl:column headerValue="Fornecedor" value="#{obj.fornecedor.nome}" />
-			<pxtfl:column headerValue="Tamanho" value="#{obj.tamanhoProduto}" />
+			<pxtfl:column headerValue="Tamanho" value="#{obj.tamanho}" />
 			<pxtfl:column headerValue="Marca" value="#{obj.marca.descricao}" />
-			<pxtfl:column headerValue="Modelo" value="#{obj.modeloProduto}" />
-			<pxtfl:column headerValue="Categoria" value="#{obj.categoriaProduto}" />
-			<pxtfl:column headerValue="Cor" value="#{obj.corProduto}" />
+			<pxtfl:column headerValue="Modelo" value="#{obj.modelo}" />
+			<pxtfl:column headerValue="Categoria" value="#{obj.categoria}" />
+			<pxtfl:column headerValue="Cor" value="#{obj.cor}" />
 			<pxtfl:column headerValue="Valor" value="#{obj.valor}" />
 			<pxtfl:column headerValue="Situação" value="#{obj.indicadorAtivo ? 'Ativo' : 'Inativo'}" />
 			

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 
 @Entity
@@ -18,20 +19,16 @@ public class Estoque implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@OneToOne// Um estoque para um Produto
-	@JoinColumn(name = "CODPRO", referencedColumnName = "CODPRO")
 	private Produto produto;
 	
-	@Column(name = "QDEPRO")
-	@Min(value = 0, message = "A quantidade deve ser positivo!")
 	private Integer quantidadeProduto;
 	
-	@Column(name = "QDERCB")
-	@Min(value = 0, message = "A quantidade deve ser positivo!")
 	private Integer quantidadeRecebimento;
 
 	
+	@Id
+	@OneToOne// Um estoque para um Produto
+	@JoinColumn(name = "CODPRO", referencedColumnName = "CODPRO")
 	public Produto getProduto() {
 		return produto;
 	}
@@ -40,6 +37,7 @@ public class Estoque implements Serializable{
 		this.produto = produto;
 	}
 	
+	@Transient
 	public Produto getProdutoNaoNulo() {
 		if(this.produto == null){
 			return new Produto();
@@ -51,6 +49,8 @@ public class Estoque implements Serializable{
 		this.produto = produto;
 	}
 	
+	@Column(name = "QDEPRO")
+	@Min(value = 0, message = "A quantidade deve ser positivo!")
 	public Integer getQuantidadeProduto() {
 		return quantidadeProduto;
 	}
@@ -59,6 +59,8 @@ public class Estoque implements Serializable{
 		this.quantidadeProduto = quantidadeProduto;
 	}
 
+	@Column(name = "QDERCB")
+	@Min(value = 0, message = "A quantidade deve ser positivo!")
 	public Integer getQuantidadeRecebimento() {
 		return quantidadeRecebimento;
 	}
@@ -116,8 +118,5 @@ public class Estoque implements Serializable{
 			return false;
 		return true;
 	}
-
-
-	
 
 }

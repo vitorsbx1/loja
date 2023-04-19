@@ -19,22 +19,19 @@ public class Fornecedor implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private Integer codigo;
+	
+	private String nome;
+	
+	private String cnpj;
+
+	private Boolean indicadorAtivo = true;
+
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FRN_SEQ")
 	@SequenceGenerator(name = "FRN_SEQ", sequenceName = "VITORSB.LJFORNECEDOR_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODFRN")
-	private Integer codigo;
-	
-	@Column(name = "DESNOM")
-	private String nome;
-	
-	@Column(name = "CNPJ")
-	private String cnpj;
-
-	@Column(name = "INDATV")
-	private Boolean indicadorAtivo = true;
-
-	
 	public Integer getCodigo() {
 		return codigo;
 	}
@@ -43,6 +40,7 @@ public class Fornecedor implements Serializable{
 		this.codigo = codigo;
 	}
 
+	@Column(name = "DESNOM")
 	public String getNome() {
 		return nome;
 	}
@@ -58,6 +56,7 @@ public class Fornecedor implements Serializable{
 	    this.nome = nome;
 	}
 
+	@Column(name = "CNPJ")
 	public String getCnpj() {
 		return cnpj;
 	}
@@ -69,6 +68,7 @@ public class Fornecedor implements Serializable{
 		this.cnpj = cnpj;
 	}
 
+	@Column(name = "INDATV")
 	public Boolean getIndicadorAtivo() {
 		return indicadorAtivo;
 	}
@@ -79,8 +79,11 @@ public class Fornecedor implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Fornecedor [codigo=" + codigo + ", nome=" + nome
-				+ ", cpf=" + cnpj + ", indicadorAtivo=" + indicadorAtivo + "]";
+		String retorno = null;
+		if(codigo != null && nome != null){
+			retorno = codigo + " - " + nome;
+		}
+		return retorno;
 	}
 
 	@Override
@@ -127,6 +130,5 @@ public class Fornecedor implements Serializable{
 			return false;
 		return true;
 	}
-
 
 }

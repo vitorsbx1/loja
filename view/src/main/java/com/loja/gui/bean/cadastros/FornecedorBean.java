@@ -1,4 +1,4 @@
-package com.loja.gui.bean;
+package com.loja.gui.bean.cadastros;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -98,10 +98,8 @@ public class FornecedorBean extends CrudController<Fornecedor>{
 				addToList(getDomain());
 				msgInfo("Alterado com sucesso!");
 			}
-			if(getEstadoCrud() == CrudState.ST_DEFAULT){
-				getListagem().clear();
-			}
 			
+			this.configuraEstado(CrudState.ST_DEFAULT);			
 		}
 		catch(TransactionException e){
 			msgWarn(e.getMessage());

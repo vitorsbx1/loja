@@ -1,4 +1,4 @@
-package com.loja.gui.bean;
+package com.loja.gui.bean.cadastros;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;

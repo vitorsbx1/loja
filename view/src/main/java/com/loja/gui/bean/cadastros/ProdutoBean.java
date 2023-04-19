@@ -1,4 +1,4 @@
-package com.loja.gui.bean;
+package com.loja.gui.bean.cadastros;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +41,7 @@ public class ProdutoBean extends CrudController<Produto> {
 	@EJB
 	private ProdutoBO produtoBO;
 	
+	
 	@Override
 	public Produto getDomain() {
 		if (domain == null) {
@@ -64,7 +65,6 @@ public class ProdutoBean extends CrudController<Produto> {
 	public PersistenceService getPersistenceService() {
 		return persistenceService;
 	}
-
 	
 	public SearchFieldController<Marca> getSearchMarca() {
 		if (searchMarca == null) {
@@ -98,7 +98,6 @@ public class ProdutoBean extends CrudController<Produto> {
 		if (searchFornecedor == null) {
 			searchFornecedor = new SearchFieldController<Fornecedor>(
 					getPersistenceService()) {
-				
 				/**
 				 * 
 				 */
@@ -129,10 +128,10 @@ public class ProdutoBean extends CrudController<Produto> {
 	}
 
 	protected void valida() throws ValidationException {
-		if (getDomain().getDescricaoProduto() == null || getDomain().getDescricaoProduto().isEmpty()) {
+		if (getDomain().getDescricao() == null || getDomain().getDescricao().isEmpty()) {
 			throw new ValidationException("A Descrição é um campo obrigatório");
 		}
-		if (getDomain().getTamanhoProduto() == null) {
+		if (getDomain().getTamanho() == null) {
 			throw new ValidationException("O tamanho é um campo obrigatório");
 		}
 		if (getDomain().getMarca() == null) {
@@ -141,14 +140,14 @@ public class ProdutoBean extends CrudController<Produto> {
 		if (getDomain().getFornecedor() == null) {
 			throw new ValidationException("O Fornecedor é um campo obrigatório");
 		}
-		if (getDomain().getModeloProduto() == null || getDomain().getModeloProduto().isEmpty()) {
+		if (getDomain().getModelo() == null || getDomain().getModelo().isEmpty()) {
 			throw new ValidationException("O modelo é um campo obrigatório");
 		}
-		if (getDomain().getCategoriaProduto() == null || getDomain().getCategoriaProduto().isEmpty()) {
+		if (getDomain().getCategoria() == null || getDomain().getCategoria().isEmpty()) {
 			throw new ValidationException("A categoria é um campo obrigatório");
 		}
-		if (getDomain().getCorProduto() == null
-				|| getDomain().getCorProduto().isEmpty()) {
+		if (getDomain().getCor() == null
+				|| getDomain().getCor().isEmpty()) {
 			throw new ValidationException("A cor é um campo obrigatório");
 		}
 		if (getDomain().getValor() == null) {
@@ -167,7 +166,6 @@ public class ProdutoBean extends CrudController<Produto> {
 			e.printStackTrace();
 			msgError(e, e.getMessage());
 		}
-	
 	}
 
 	@Override
@@ -195,5 +193,4 @@ public class ProdutoBean extends CrudController<Produto> {
 			msgWarn(e.getMessage());
 		}
 	}
-
 }

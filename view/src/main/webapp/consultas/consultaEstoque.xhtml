@@ -11,39 +11,101 @@
 		<ui:param name="titulo" value="Consulta Estoque" />
 	
 		<ui:define name="panelFiltro">
-			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="100%" width="40%">
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="40%;30%;30%" width="70%">
 				<h:outputLabel value="Produto:" styleClass="outputText" />
+				<h:outputLabel value="Marca:" styleClass="outputText" />
+				<h:outputLabel value="Fornecedor:" styleClass="outputText" />
 				
-			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricaoProduto" controller="#{estoqueBean.searchProduto}" modalTitle="Produto" width="90%">
+			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricao" controller="#{estoqueBean.searchProduto}" modalTitle="Produto" width="98%">
 					<ui:define name="filtros">
 						<pxt:panelGrid columnsWidth="10%;90%">
 							<h:outputText value="Código:" styleClass="outputText" />
 							<h:inputText
-								value="#{estoqueBean.searchProduto.searchObject.codigoProduto}" maxlength="7" style="width: 15%;">
+								value="#{estoqueBean.searchProduto.searchObject.codigo}" maxlength="7" style="width: 15%;">
 								<pxt:onlyNumber />
 							</h:inputText>
 							
 							<h:outputText value="Descrição:" styleClass="outputText" />
 							<h:inputText
-								value="#{estoqueBean.searchProduto.searchObject.descricaoProduto}" maxlength="100" style="width: 100%;">
+								value="#{estoqueBean.searchProduto.searchObject.descricao}" maxlength="100" style="width: 100%;">
 								<pxt:upperCase />
 							</h:inputText>
 						</pxt:panelGrid>
 					</ui:define>
 					<ui:define name="colunas">
-						<pxtfl:column headerValue="Código" value="#{obj.codigoProduto}"
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
 							columnWidth="10%" />
-						<pxtfl:column headerValue="Descrição" value="#{obj.descricaoProduto}"
+						<pxtfl:column headerValue="Descrição" value="#{obj.descricao}"
 							columnWidth="80%" />
+					</ui:define>
+				</pxtfl:searchField>
+				
+
+				<pxtfl:searchField value="Pesquisar" id="searchMarca" searchProperty="descricao" controller="#{estoqueBean.searchMarca}" modalTitle="Marca" width="98%">
+					<ui:define name="filtros">
+						<pxt:panelGrid columnsWidth="10%;90%">
+							<h:outputText value="Código:" styleClass="outputText" />
+							<h:inputText
+								value="#{estoqueBean.searchMarca.searchObject.codigo}" maxlength="7" style="width: 15%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+							<h:outputText value="Descrição:" styleClass="outputText" />
+							<h:inputText
+								value="#{estoqueBean.searchMarca.searchObject.descricao}" maxlength="100" style="width: 100%;">
+								<pxt:upperCase />
+							</h:inputText>				
+						</pxt:panelGrid>
+					</ui:define>
+					<ui:define name="colunas">
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
+							columnWidth="10%" />
+						<pxtfl:column headerValue="Descrição" value="#{obj.descricao}"
+							columnWidth="80%" />
+					</ui:define>
+				</pxtfl:searchField>
+				
+				<pxtfl:searchField value="Pesquisar" id="searchFornecedor" searchProperty="nome" controller="#{estoqueBean.searchFornecedor}" modalTitle="Fornecedor" width="98%">
+					<ui:define name="filtros">
+						<pxt:panelGrid columnsWidth="10%;90%">
+							<h:outputText value="Código:" styleClass="outputText" />
+							<h:inputText
+								value="#{estoqueBean.searchFornecedor.searchObject.codigo}" maxlength="7" style="width: 15%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+							<h:outputText value="Nome:" styleClass="outputText" />
+							<h:inputText
+								value="#{estoqueBean.searchFornecedor.searchObject.nome}" maxlength="100" style="width: 100%;">
+								<pxt:upperCase />
+							</h:inputText>
+							
+							<h:outputText value="CNPJ:" styleClass="outputText" />
+							<h:inputText
+								value="#{estoqueBean.searchFornecedor.searchObject.cnpj}" maxlength="14" style="width: 100%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+						</pxt:panelGrid>
+					</ui:define>
+					<ui:define name="colunas">
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
+							columnWidth="10%" />
+						<pxtfl:column headerValue="Nome" value="#{obj.nome}"
+							columnWidth="80%" />
+						<pxtfl:column headerValue="CNPJ" value="#{obj.cnpj}"
+							columnWidth="80%" />	
 					</ui:define>
 				</pxtfl:searchField>
 			</pxt:panelGrid>
 		</ui:define>
 
 		<ui:define name="colunasTabela">
-			<pxtfl:column headerValue="Produto" value="#{obj.produto.codigoProduto} - #{obj.produto.descricaoProduto}" style="width: 60%"/>
-			<pxtfl:column headerValue="Qtd Estoque" value="#{obj.quantidadeProduto}" style="width: 20%"/>
-			<pxtfl:column headerValue="Qtd Recebimento" value="#{obj.quantidadeRecebimento}" style="width: 20%"/>
+			<pxtfl:column headerValue="Produto" value="#{obj.produto.codigo} - #{obj.produto.descricao}" style="width: 40%"/>
+			<pxtfl:column headerValue="Marca" value="#{obj.produto.marca.descricao}" style="width: 20%"/>
+			<pxtfl:column headerValue="Fornecedor" value="#{obj.produto.fornecedor.nome}" style="width: 20%"/>
+			<pxtfl:column headerValue="Qtd Estoque" value="#{obj.quantidadeProduto}" style="width: 10%"/>
+			<pxtfl:column headerValue="Qtd Recebimento" value="#{obj.quantidadeRecebimento}" style="width: 10%"/>
 		</ui:define>		
 	</ui:composition>
 </html>

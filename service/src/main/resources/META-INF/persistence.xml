@@ -15,7 +15,10 @@
 		<class>com.pxt.loja.domain.Cliente</class>
 		<class>com.pxt.loja.domain.Estoque</class>
 		<class>com.pxt.loja.domain.MovimentacaoEstoque</class>
-
+		<class>com.pxt.loja.domain.Pedido</class>
+		<class>com.pxt.loja.domain.ItemPedido</class> 
+		<!-- <class>com.pxt.loja.domain.ItemID</class> -->
+		
 		<properties>
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />

@@ -6,8 +6,8 @@
 	xmlns:pxtfl="http://www.peixoto.com.br/jsf" xmlns:pxtfc="http://www.peixoto.com.br/jsf/core">
 
 	<ui:composition template="/META-INF/facelets/templates/search.xhtml">
-		<ui:param name="form_id" value="formMovimentacao" />
-		<ui:param name="backingBean" value="#{movimentacaoBean}" />
+		<ui:param name="form_id" value="formMovimentacoes"/>
+		<ui:param name="backingBean" value="#{movimentacoesBean}" />
 		<ui:param name="titulo" value="Relatório de Movimentações" />
 	
 		<ui:define name="panelFiltro">
@@ -17,46 +17,52 @@
 				<h:outputLabel value="Produto:" styleClass="outputText" />
 			
 			<h:panelGroup>
-				<rich:calendar value="#{movimentacaoBean.dataInicial}" datePattern="dd/MM/yyyy"/>
+				<rich:calendar value="#{movimentacoesBean.dataInicial}" datePattern="dd/MM/yyyy"/>
 				<h:outputText value=" a " styleClass="outputText"/>
-				<rich:calendar value="#{movimentacaoBean.dataFinal}" datePattern="dd/MM/yyyy"/>
+				<rich:calendar value="#{movimentacoesBean.dataFinal}" datePattern="dd/MM/yyyy"/>
 			</h:panelGroup>										
 			
-			<h:selectOneMenu value="#{movimentacaoBean.domain.tipoOperacao}" style="width:98%" converter="defaultConverter">
+			<h:selectOneMenu value="#{movimentacoesBean.domain.tipoOperacao}" style="width:98%" converter="defaultConverter">
 				<f:selectItem itemLabel="" itemValue=""/>
-				<f:selectItems value="#{movimentacaoBean.tipoOperacoes}" var="obj" itemLabel="#{obj}"/>
+				<f:selectItems value="#{movimentacoesBean.tipoOperacoes}" var="obj" itemLabel="#{obj}"/>
 			</h:selectOneMenu>
 			
-			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricaoProduto" controller="#{movimentacaoBean.searchProduto}" modalTitle="Produto" width="90%">
+			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricao" controller="#{movimentacoesBean.searchProduto}" modalTitle="Produto" width="90%">
 					<ui:define name="filtros">
 						<pxt:panelGrid columnsWidth="10%;90%">
 							<h:outputText value="Código:" styleClass="outputText" />
 							<h:inputText
-								value="#{movimentacaoBean.searchProduto.searchObject.codigoProduto}" maxlength="7" style="width: 15%;">
+								value="#{movimentacoesBean.searchProduto.searchObject.codigo}" maxlength="7" style="width: 15%;">
 								<pxt:onlyNumber />
 							</h:inputText>
 							
 							<h:outputText value="Descrição:" styleClass="outputText" />
 							<h:inputText
-								value="#{movimentacaoBean.searchProduto.searchObject.descricaoProduto}" maxlength="100" style="width: 100%;">
+								value="#{movimentacoesBean.searchProduto.searchObject.descricao}" maxlength="100" style="width: 100%;">
 								<pxt:upperCase />
 							</h:inputText>
 						</pxt:panelGrid>
 					</ui:define>
 					<ui:define name="colunas">
-						<pxtfl:column headerValue="Código" value="#{obj.codigoProduto}"
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
 							columnWidth="10%" />
-						<pxtfl:column headerValue="Descrição" value="#{obj.descricaoProduto}"
+						<pxtfl:column headerValue="Descrição" value="#{obj.descricao}"
 							columnWidth="80%" />
 					</ui:define>
 				</pxtfl:searchField>
 			</pxt:panelGrid>
 		</ui:define>
+		
+		<ui:define name="toolbarExtraButtons">
+			<h:commandButton value="Exportar" title="Exportar para Excel" render="mensagemGeral,messagePane" styleClass="btnToolbar" 
+			style="background:transparent url(#{facesContext.externalContext.requestContextPath}/resources/img/excel_novo.png) no-repeat center left; width: 100px;" 
+			action="#{movimentacoesBean.exportar}"/> 
+		</ui:define>
 
 		<ui:define name="colunasTabela">
-			<pxtfl:column headerValue="Data Mov." value="#{obj.dataMovimentacao}" />
-			<pxtfl:column headerValue="Produto" value="#{obj.produto.codigoProduto} - #{obj.produto.descricaoProduto}" />
-			<pxtfl:column headerValue="Quantidade" value="#{obj.quantidadeMovimentacao}" />
+			<pxtfl:column headerValue="Data Mov." value="#{obj.data}" />
+			<pxtfl:column headerValue="Produto" value="#{obj.produto.codigo} - #{obj.produto.descricao}" />
+			<pxtfl:column headerValue="Quantidade" value="#{obj.quantidade}" />
 			<pxtfl:column headerValue="Tipo Operacao" value="#{obj.tipoOperacao}" />
 		</ui:define>		
 	</ui:composition>

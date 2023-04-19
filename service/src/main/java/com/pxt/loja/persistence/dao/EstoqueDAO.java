@@ -15,22 +15,20 @@ import pxt.framework.persistence.PersistenceException;
 import com.pxt.loja.domain.Estoque;
 import com.pxt.loja.domain.Produto;
 
+@SuppressWarnings("all")
 @Stateless
 public class EstoqueDAO extends LOJAHibernateDAO<Estoque, Produto> {
 	
 	@EJB
 	PersistenceService persistenceService;
 
-	
-	@SuppressWarnings("unchecked")
 	public List<Estoque> buscarPorExemplo(Estoque estoque) throws PersistenceException {
-
 		try {
 			Criteria criteria = getSession().createCriteria(Estoque.class);
 
 			if (estoque.getProduto() != null
-					&& estoque.getProduto().getCodigoProduto() != null) {
-				criteria.add(Restrictions.eq("produto.codigoProduto", estoque.getProduto().getCodigoProduto()));
+					&& estoque.getProduto().getCodigo() != null) {
+				criteria.add(Restrictions.eq("produto.codigo", estoque.getProduto().getCodigo()));
 			}
 			return criteria.list();
 		}catch (Exception e) {
@@ -38,12 +36,11 @@ public class EstoqueDAO extends LOJAHibernateDAO<Estoque, Produto> {
 		}
 	}
 
-	public Estoque buscarProdutoCodigo(Integer codigoProduto) throws PersistenceException {
-
+	public Estoque buscarProdutoCodigo(Integer codigo) throws PersistenceException {
 		try {
 			Criteria criteria = getSession().createCriteria(Estoque.class);
-			if (codigoProduto != null) {
-				criteria.add(Restrictions.eq("produto.codigoProduto",codigoProduto));
+			if (codigo != null) {
+				criteria.add(Restrictions.eq("produto.codigo",codigo));
 			}
 			return (Estoque) criteria.uniqueResult();
 		}catch (Exception e) {
@@ -56,6 +53,24 @@ public class EstoqueDAO extends LOJAHibernateDAO<Estoque, Produto> {
 			return persistenceService.saveOrUpdate(estoque);
 		}catch (Exception e) {
 			throw new TransactionException("Falha ao salvar Estoque", e);
+		}
+	}
+	
+	public List<Estoque> buscar(Estoque estoque, List<Produto> produtosEncontrados) throws PersistenceException{
+		try{
+			Criteria criteria = getSession().createCriteria(Estoque.class);
+			
+			if(estoque.getProduto() != null && estoque.getProduto().getCodigo() != null){
+				criteria.add(Restrictions.eq("produto.codigo", estoque.getProduto().getCodigo()));
+			}
+			if(!produtosEncontrados.isEmpty()){
+				criteria.add(Restrictions.in("produto", produtosEncontrados));
+			}
+			
+			return criteria.list();
+			
+		}catch(Exception e){
+			throw new PersistenceException("Não foi psosível buscar o estoque!" , e);
 		}
 	}
 }

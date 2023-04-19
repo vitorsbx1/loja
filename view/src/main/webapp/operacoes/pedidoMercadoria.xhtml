@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" xmlns:pxt="http://www.peixoto.com.br/pxtFaces"
+	xmlns:pxtfl="http://www.peixoto.com.br/jsf" xmlns:pxtfc="http://www.peixoto.com.br/jsf/core">
+
+	<ui:composition template="/META-INF/facelets/templates/crud.xhtml">
+		<ui:param name="form_id" value="formPedidoMercadoria" />
+		<ui:param name="backingBean" value="#{pedidoMercadoriaBean}" />
+		<ui:param name="titulo" value="Pedido de Mercadorias" />
+		<ui:param name="renderedEdit" value="false" />
+		<ui:param name="renderedDelete" value="false" />
+		
+		<ui:define name="btnFind"></ui:define>
+	
+		<ui:define name="panelCadastro">
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="35%;35%;20;10%" width="70%">
+				<h:outputLabel value="Cliente:" styleClass="outputText" />
+				<h:outputLabel value="Produto:" styleClass="outputText" />	
+				<h:outputLabel value="Quantidade:" styleClass="outputText" />	
+				<h:outputLabel value="Valor Total Pedido: " style="background-color: #2DC26E" styleClass="outputText" />											
+
+			<pxtfl:searchField value="Pesquisar" id="searchCliente" searchProperty="nome" controller="#{pedidoMercadoriaBean.searchCliente}" modalTitle="Cliente" disabledOn="#{pedidoMercadoriaBean.disabledOnDefault}" width="95%">
+				<ui:define name="filtros">
+					<pxt:panelGrid columnsWidth="10%;90%">
+						<h:outputText value="Código:" styleClass="outputText" />
+						<h:inputText
+							value="#{pedidoMercadoriaBean.searchCliente.searchObject.codigo}" maxlength="7" style="width: 15%;">
+							<pxt:onlyNumber />
+						</h:inputText>
+						
+						<h:outputText value="Descrição:" styleClass="outputText" />
+						<h:inputText
+							value="#{pedidoMercadoriaBean.searchCliente.searchObject.nome}" maxlength="100" style="width: 100%;">
+							<pxt:upperCase />
+						</h:inputText>
+					</pxt:panelGrid>
+				</ui:define>
+				
+				<ui:define name="colunas">
+					<pxtfl:column headerValue="Código" value="#{obj.codigo}"
+						columnWidth="10%" />
+					<pxtfl:column headerValue="Descrição" value="#{obj.nome}"
+						columnWidth="80%" />
+				</ui:define>
+			</pxtfl:searchField>
+
+			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricao" controller="#{pedidoMercadoriaBean.searchProduto}" modalTitle="Produto" disabledOn="#{pedidoMercadoriaBean.disabledOnDefault}" width="95%">
+					<ui:define name="filtros">
+						<pxt:panelGrid columnsWidth="10%;90%">
+							<h:outputText value="Código:" styleClass="outputText" />
+							<h:inputText
+								value="#{pedidoMercadoriaBean.searchProduto.searchObject.codigo}" maxlength="7" style="width: 15%;">
+								<pxt:onlyNumber />
+							</h:inputText>
+							
+							<h:outputText value="Descrição:" styleClass="outputText" />
+							<h:inputText
+								value="#{pedidoMercadoriaBean.searchProduto.searchObject.descricao}" maxlength="100" style="width: 100%;">
+								<pxt:upperCase />
+							</h:inputText>
+						</pxt:panelGrid>
+					</ui:define>
+					
+					<ui:define name="colunas">
+						<pxtfl:column headerValue="Código" value="#{obj.codigo}"
+							columnWidth="10%" />
+						<pxtfl:column headerValue="Descrição" value="#{obj.descricao}"
+							columnWidth="80%" />
+					</ui:define>
+				</pxtfl:searchField>
+
+				<h:inputText value="#{pedidoMercadoriaBean.quantidade}" maxlength="10" style="width:100%" disabled="#{pedidoMercadoriaBean.disabledOnDefault}" >
+					<pxt:onlyNumber />
+				</h:inputText>
+				
+			</pxt:panelGrid>
+			
+			<pxt:panelGrid id="panelItens" columnsWidth="100%" width="100%">
+				<rich:panel id="tabPanelItens" bodyClass="pxt-rich-body-panel-detail zeroBodySpace">	
+					<rich:dataTable id="tabelaItens" var="itemPedido" rowClasses="pxt-odd-row, pxt-even-row" value="#{pedidoMercadoriaBean.domain.listaItens}" styleClass="stable" footerClass="pxt-rf-dt-ftr-c" rowKeyVar="keyVar" rows="14" render="tabelaProdutosScroller">
+						<ui:param name="columnGroupId" value="tabelaItens" />
+							<pxtfl:column headerValue="Código" value="#{itemPedido.produtoNaoNulo.codigo}" textAlign="center" />
+							<pxtfl:column headerValue="Descrição" value="#{itemPedido.produtoNaoNulo.descricao}" textAlign="center" />
+							<pxtfl:column headerValue="Tamanho" value="#{itemPedido.produtoNaoNulo.tamanho}" textAlign="center" />
+							<pxtfl:column headerValue="Marca" value="#{itemPedido.produtoNaoNulo.marca}" textAlign="center" />
+							<pxtfl:column headerValue="Fornecedor" value="#{itemPedido.produtoNaoNulo.fornecedor}" textAlign="center" />
+							<pxtfl:column headerValue="Modelo" value="#{itemPedido.produtoNaoNulo.modelo}" textAlign="center" />
+							<pxtfl:column headerValue="Cor" value="#{itemPedido.produtoNaoNulo.cor}" textAlign="center" />
+							<pxtfl:column headerValue="Quantidade" value="#{itemPedido.quantidade}" textAlign="center"/>
+							<pxtfl:column headerValue="Valor" value="#{itemPedido.valor}" typeFormat="currency" textAlign="center"/>
+							<rich:column>
+								<h:commandButton value="Excluir" action="#{pedidoMercadoriaBean.domain.removerItem}" render="panelItens"  /> 
+							</rich:column>
+					</rich:dataTable>
+				</rich:panel>
+			</pxt:panelGrid>
+		</ui:define>
+		
+		<ui:define name="table" />
+		
+		</ui:composition>
+</html>

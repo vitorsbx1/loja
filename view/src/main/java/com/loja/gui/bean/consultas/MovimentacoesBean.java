@@ -1,5 +1,7 @@
-package com.loja.gui.bean;
+package com.loja.gui.bean.consultas;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 
 import pxt.framework.business.PersistenceService;
 import pxt.framework.faces.controller.SearchController;
@@ -21,7 +25,7 @@ import com.pxt.loja.domain.TipoOperacao;
 
 @ManagedBean
 @ViewScoped
-public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
+public class MovimentacoesBean extends SearchController <MovimentacaoEstoque> {
 	/**
 	 * 
 	 */
@@ -168,6 +172,27 @@ public class MovimentacaoBean extends SearchController <MovimentacaoEstoque> {
 		}
 	}
 
-
+	@Override
+	public void exportar() {
+		System.out.println("Exportar");
+		if (getListagem() == null || getListagem().isEmpty()) {
+			msgInfo("Não existe nenhum registro à ser exportado");
+		} else {
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			response.setContentType("application/txt");
+			response.setHeader("Content-Disposition", "inline;filename=\"movimentacao.csv\"");
+			try {
+				ByteArrayOutputStream outputStream = movimentacaoBO.gerarCsv(getListagem());
+				response.getOutputStream().write(outputStream.toByteArray());
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+				response.flushBuffer();
+				FacesContext.getCurrentInstance().responseComplete();
+			} catch (IOException e) {
+				e.printStackTrace();
+				msgError(e, "Não foi possível realizar a exportação");
+			}
+		}
+	}
 
 }

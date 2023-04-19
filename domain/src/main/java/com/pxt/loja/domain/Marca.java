@@ -19,19 +19,17 @@ public class Marca implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private Integer codigo;
+	
+	private String descricao;
+
+	private Boolean indicadorAtivo = true;
+
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MRC_SEQ")
 	@SequenceGenerator(name = "MRC_SEQ", sequenceName = "VITORSB.LJMARCA_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODMRC")
-	private Integer codigo;
-	
-	@Column(name = "DESMRC")
-	private String descricao;
-
-	@Column(name = "INDATV")
-	private Boolean indicadorAtivo = true;
-
-	
 	public Integer getCodigo() {
 		return codigo;
 	}
@@ -40,6 +38,7 @@ public class Marca implements Serializable{
 		this.codigo = codigo;
 	}
 
+	@Column(name = "DESMRC")
 	public String getDescricao() {
 	    return descricao;
 	}
@@ -54,6 +53,7 @@ public class Marca implements Serializable{
 	    this.descricao = descricao;
 	}
 
+	@Column(name = "INDATV")
 	public Boolean getIndicadorAtivo() {
 		return indicadorAtivo;
 	}
@@ -64,8 +64,11 @@ public class Marca implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Marca [codigo=" + codigo + ", descricao=" + descricao
-				+ ", indicadorAtivo=" + indicadorAtivo + "]";
+		String retorno = null;
+		if(codigo != null && descricao != null){
+			retorno = codigo + " - " + descricao;
+		}
+		return retorno;
 	}
 
 	@Override
@@ -106,7 +109,5 @@ public class Marca implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
 	
 }

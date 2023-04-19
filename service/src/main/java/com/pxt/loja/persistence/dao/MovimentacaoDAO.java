@@ -26,8 +26,8 @@ public class MovimentacaoDAO extends LOJAHibernateDAO<MovimentacaoEstoque, Produ
 		try{
 		Criteria criteria = getSession().createCriteria(Estoque.class);
 		
-		if(estoque.getProduto() != null && estoque.getProduto().getCodigoProduto() != null){
-			criteria.add(Restrictions.eq("produto.codigoProduto", estoque.getProduto().getCodigoProduto()));
+		if(estoque.getProduto() != null && estoque.getProduto().getCodigo() != null){
+			criteria.add(Restrictions.eq("produto.codigo", estoque.getProduto().getCodigo()));
 		}
 		return criteria.list();
 		 
@@ -41,14 +41,14 @@ public class MovimentacaoDAO extends LOJAHibernateDAO<MovimentacaoEstoque, Produ
 			Criteria criteria = getSession().createCriteria(MovimentacaoEstoque.class);
 			
 			if(dataInicial != null && dataFinal != null){
-				criteria.add(Restrictions.ge("dataMovimentacao", DateHelper.addDays(dataFinal, 0, true)));
-				criteria.add(Restrictions.lt("dataMovimentacao", DateHelper.addDays(dataFinal, 1, true)));
+				criteria.add(Restrictions.ge("data", DateHelper.addDays(dataFinal, 0, true)));
+				criteria.add(Restrictions.lt("data", DateHelper.addDays(dataFinal, 1, true)));
 			}
 			if(tipoOperacao != null){
 				criteria.add(Restrictions.eq("tipoOperacao", tipoOperacao));
 			}
 			if(produto != null){
-				criteria.add(Restrictions.eq("produto.codigoProduto", produto.getCodigoProduto()));
+				criteria.add(Restrictions.eq("produto.codigo", produto.getCodigo()));
 			}
 			return criteria.list();
 			

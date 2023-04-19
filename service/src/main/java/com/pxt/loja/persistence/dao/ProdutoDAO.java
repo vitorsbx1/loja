@@ -40,11 +40,32 @@ public class ProdutoDAO extends LOJAHibernateDAO<Produto, Integer>{
 			Criteria criteria = getSession().createCriteria(Produto.class);
 			
 			if(produto != null){
-				if(produto.getCodigoProduto() != null){
-					criteria.add(Restrictions.eq("codigoProduto", produto.getCodigoProduto()));
+				if(produto.getCodigo() != null){
+					criteria.add(Restrictions.eq("codigo", produto.getCodigo()));
 				}
-				if(produto.getDescricaoProduto() != null && !produto.getDescricaoProduto().isEmpty()){
-					criteria.add(Restrictions.like("descricaoProduto", produto.getDescricaoProduto(), MatchMode.ANYWHERE));
+				if(produto.getDescricao() != null && !produto.getDescricao().isEmpty()){
+					criteria.add(Restrictions.like("descricao", produto.getDescricao(), MatchMode.ANYWHERE));
+				}
+				if(produto.getFornecedor() != null && produto.getFornecedor().getCodigo() != null){
+					criteria.add(Restrictions.eq("fornecedor.codigo", produto.getFornecedor().getCodigo()));
+				}
+				if(produto.getMarca() != null && produto.getMarca().getCodigo() != null){
+					criteria.add(Restrictions.eq("marca.codigo", produto.getMarca().getCodigo()));
+				}
+				if(produto.getCategoria() != null && !produto.getCategoria().isEmpty()){
+					criteria.add(Restrictions.like("categoria", produto.getCategoria()));
+				}
+				if(produto.getModelo() != null && !produto.getModelo().isEmpty()){
+					criteria.add(Restrictions.like("modelo", produto.getModelo()));
+				}
+				if(produto.getCor() != null && !produto.getCor().isEmpty()){
+					criteria.add(Restrictions.like("cor", produto.getCor()));
+				}
+				if(produto.getTamanho()!= null){
+					criteria.add(Restrictions.eq("tamanho", produto.getTamanho()));
+				}
+				if(produto.getValor() != null){
+					criteria.add(Restrictions.eq("valor", produto.getValor()));
 				}
 			}			
 			return criteria.list();

@@ -1,4 +1,4 @@
-package com.loja.gui.bean;
+package com.loja.gui.bean.cadastros;
 
 import java.util.Calendar;
 import java.util.Date;

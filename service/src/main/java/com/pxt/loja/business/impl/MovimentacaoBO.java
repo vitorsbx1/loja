@@ -1,5 +1,7 @@
 package com.pxt.loja.business.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -38,15 +40,23 @@ public class MovimentacaoBO {
 		Date dataMovimentacao = new Date();
 		Estoque estoque;
 		
-		estoque = estoqueBO.buscarProdutoCodigo(movimentacaoEstoque.getProduto().getCodigoProduto());
+		estoque = estoqueBO.buscarProdutoCodigo(movimentacaoEstoque.getProduto().getCodigo());
 
 		estoque = criaEstoqueNulo(movimentacaoEstoque, estoque);
-				
-		realizaRecebimento(movimentacaoEstoque, estoque);
-
-		realizaEntrada(movimentacaoEstoque, estoque);
 		
-		movimentacaoEstoque.setDataMovimentacao(dataMovimentacao);
+		if(movimentacaoEstoque.getTipoOperacao() == TipoOperacao.RECEBER){
+			realizaRecebimento(movimentacaoEstoque, estoque);
+		}
+		
+		if(movimentacaoEstoque.getTipoOperacao() == TipoOperacao.ENTRADA){
+			realizaEntrada(movimentacaoEstoque, estoque);
+		}
+		
+		if(movimentacaoEstoque.getTipoOperacao() == TipoOperacao.VENDIDO){
+			realizaVenda(movimentacaoEstoque, estoque);
+		}
+		
+		movimentacaoEstoque.setData(dataMovimentacao);
 		
 		estoqueBO.salvarEstoque(estoque);
 		movimentacaoDAO.saveOrUpdate(movimentacaoEstoque);
@@ -75,24 +85,66 @@ public class MovimentacaoBO {
 	}
 
 	private void realizaRecebimento(MovimentacaoEstoque movimentacaoEstoque, Estoque estoque) throws ValidationException {
-		if(movimentacaoEstoque.getTipoOperacao() == movimentacaoEstoque.getTipoOperacao().RECEBER){
-			if(movimentacaoEstoque.getQuantidadeMovimentacao() == 0){
+			if(movimentacaoEstoque.getQuantidade() == 0){
 				throw new ValidationException("Não é possível inserir valor zerado para Recebimento");
 			}
-			estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento()	+ movimentacaoEstoque.getQuantidadeMovimentacao());
-		}
+			estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento()	+ movimentacaoEstoque.getQuantidade());
 	}
 
 	private void realizaEntrada(MovimentacaoEstoque movimentacaoEstoque,Estoque estoque) throws ValidationException {
-		if (movimentacaoEstoque.getTipoOperacao() == movimentacaoEstoque.getTipoOperacao().ENTRADA) {
-			if (movimentacaoEstoque.getQuantidadeMovimentacao() == 0) {
+			if (movimentacaoEstoque.getQuantidade() == 0) {
 				throw new ValidationException("Não é possível inserir valor zerado para Entrada");
 			}
-			if (movimentacaoEstoque.getQuantidadeMovimentacao() > estoque.getQuantidadeRecebimento()) {
+			if (movimentacaoEstoque.getQuantidade() > estoque.getQuantidadeRecebimento()) {
 				throw new ValidationException("Não é possível inserir valor superior a quantidade em Recebimento: "	+ estoque.getQuantidadeRecebimento());
 			}
-			estoque.setQuantidadeProduto(estoque.getQuantidadeProduto()	+ movimentacaoEstoque.getQuantidadeMovimentacao());
-			estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento() - movimentacaoEstoque.getQuantidadeMovimentacao());
+			estoque.setQuantidadeProduto(estoque.getQuantidadeProduto()	+ movimentacaoEstoque.getQuantidade());
+			estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento() - movimentacaoEstoque.getQuantidade());
+	}
+	
+	
+	private void realizaVenda(MovimentacaoEstoque movimentacaoEstoque,Estoque estoque) throws ValidationException {
+			if (movimentacaoEstoque.getQuantidade() == 0) {
+				throw new ValidationException("Não é possível inserir valor zerado para Venda");
+			}
+			if (movimentacaoEstoque.getQuantidade() > estoque.getQuantidadeProduto()) {
+				throw new ValidationException("Não é possível inserir valor superior a quantidade em Estoque: "	+ estoque.getQuantidadeProduto());
+			}
+			estoque.setQuantidadeProduto(estoque.getQuantidadeProduto()	- movimentacaoEstoque.getQuantidade());
+	}
+	
+	
+	public ByteArrayOutputStream gerarCsv(List<MovimentacaoEstoque> listagem) throws IOException {
+		StringBuilder arquivo = new StringBuilder();
+		arquivo.append("Cód. Movimentação;");
+		arquivo.append("Data;");
+		arquivo.append("Operação;");
+		arquivo.append("Qde Movimentada;");
+		arquivo.append("Produto;");
+		// arquivo.append("Des. Produto;");
+		arquivo.append("\n");
+		for (MovimentacaoEstoque lista : listagem) {
+			arquivo.append(lista.getCodigo() == null ? "" : lista.getCodigo()).append(";");
+			arquivo.append(lista.getData() == null ? "" : lista.getData()).append(";");
+			arquivo.append(lista.getTipoOperacao() == null ? "" : lista.getTipoOperacao()).append(";");
+			arquivo.append(lista.getQuantidade() == null ? "" : lista.getQuantidade()).append(";");
+			// MÉTODO ABAIXO RETORNA O CÓDIGO E A DESCRIÇÃO CONCATENADOS:
+			String codigoDescricao = "";
+			if (lista.getProduto() != null) {
+				String descricao = lista.getProduto().getDescricao() == null ? "" : lista.getProduto().getDescricao();
+				String codigo = lista.getProduto().getCodigo() == null ? "" : String.valueOf(lista.getProduto().getCodigo());
+				codigoDescricao = codigo + " - " + descricao;
+			}
+			arquivo.append(codigoDescricao).append(";");
+			// GERA A DESCRICAO EM OUTRA COLUNA -
+			// arquivo.append(lista.getCodigoProduto().getDescricaoProduto() ==
+			// null ? "" :
+			// lista.getCodigoProduto().getDescricaoProduto()).append(";");
+			arquivo.append("\n");
 		}
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		outputStream.write(arquivo.toString().getBytes());
+		outputStream.write('\n');
+		return outputStream;
 	}
 }

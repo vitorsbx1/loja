@@ -1,4 +1,4 @@
-package com.loja.gui.bean;
+package com.loja.gui.bean.operacoes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -108,7 +108,7 @@ public class MovimentacoesMercadoriaBean extends CrudController<MovimentacaoEsto
 		if(getDomain().getProduto() == null){
 			throw new ValidationException("O Produto é um campo obrigatório");
 		}
-		if(getDomain().getQuantidadeMovimentacao() == null){
+		if(getDomain().getQuantidade() == null){
 			throw new ValidationException("Quantidade é um campo obrigatório");
 		}
 		if(getDomain().getTipoOperacao() == null){

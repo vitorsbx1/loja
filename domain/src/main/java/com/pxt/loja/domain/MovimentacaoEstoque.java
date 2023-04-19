@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 
 
@@ -24,45 +25,41 @@ public class MovimentacaoEstoque implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private Long codigo;
 
+	private Date data;
+	
+	private Produto produto;
+	
+	private Integer quantidade;
+	
+	private TipoOperacao tipoOperacao;
+
+	
 	@Id
 	@Column(name = "CODMOV")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MOVETQ_SEQ")
 	@SequenceGenerator(name = "MOVETQ_SEQ", sequenceName = "VITORSB.LJMOVETQ_SEQ", initialValue = 1, allocationSize = 1)
-	private Long codigoMovimentacao;
+	public Long getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(Long codigo) {
+		this.codigo = codigo;
+	}
 
 	@Column(name = "DATMOV")
-	private Date dataMovimentacao;
-	
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+
 	@ManyToOne(targetEntity = Produto.class) // Varias movimentacoes para um Produto
 	@JoinColumn(name = "CODPRO", referencedColumnName = "CODPRO")
-	private Produto produto;
-	
-	@Column(name = "QDEMOV")
-	@Min(value = 0, message = "A quantidade deve ser positivo!")
-	private Integer quantidadeMovimentacao;
-	
-	@Column(name = "DESOPE")
-	@Enumerated(EnumType.STRING)
-	private TipoOperacao tipoOperacao;
-
-	
-	public Long getCodigoMovimentacao() {
-		return codigoMovimentacao;
-	}
-
-	public void setCodigoMovimentacao(Long codigoMovimentacao) {
-		this.codigoMovimentacao = codigoMovimentacao;
-	}
-
-	public Date getDataMovimentacao() {
-		return dataMovimentacao;
-	}
-
-	public void setDataMovimentacao(Date dataMovimentacao) {
-		this.dataMovimentacao = dataMovimentacao;
-	}
-
 	public Produto getProduto() {
 		return produto;
 	}
@@ -71,6 +68,7 @@ public class MovimentacaoEstoque implements Serializable {
 		this.produto = produto;
 	}
 	
+	@Transient
 	public Produto getProdutoNaoNulo() {
 		if(this.produto == null){
 			return new Produto();
@@ -81,16 +79,19 @@ public class MovimentacaoEstoque implements Serializable {
 	public void setProdutoNaoNulo(Produto produto) {
 		this.produto = produto;
 	}
-	
 
-	public Integer getQuantidadeMovimentacao() {
-		return quantidadeMovimentacao;
+	@Column(name = "QDEMOV")
+	@Min(value = 0, message = "A quantidade deve ser positivo!")
+	public Integer getQuantidade() {
+		return quantidade;
 	}
 
-	public void setQuantidadeMovimentacao(Integer quantidadeMovimentacao) {
-		this.quantidadeMovimentacao = quantidadeMovimentacao;
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 
+	@Column(name = "DESOPE")
+	@Enumerated(EnumType.STRING)
 	public TipoOperacao getTipoOperacao() {
 		return tipoOperacao;
 	}
@@ -105,16 +106,16 @@ public class MovimentacaoEstoque implements Serializable {
 		int result = 1;
 		result = prime
 				* result
-				+ ((codigoMovimentacao == null) ? 0 : codigoMovimentacao
+				+ ((codigo == null) ? 0 : codigo
 						.hashCode());
 		result = prime
 				* result
-				+ ((dataMovimentacao == null) ? 0 : dataMovimentacao.hashCode());
+				+ ((data == null) ? 0 : data.hashCode());
 		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
 		result = prime
 				* result
-				+ ((quantidadeMovimentacao == null) ? 0
-						: quantidadeMovimentacao.hashCode());
+				+ ((quantidade == null) ? 0
+						: quantidade.hashCode());
 		result = prime * result
 				+ ((tipoOperacao == null) ? 0 : tipoOperacao.hashCode());
 		return result;
@@ -129,25 +130,25 @@ public class MovimentacaoEstoque implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		MovimentacaoEstoque other = (MovimentacaoEstoque) obj;
-		if (codigoMovimentacao == null) {
-			if (other.codigoMovimentacao != null)
+		if (codigo == null) {
+			if (other.codigo != null)
 				return false;
-		} else if (!codigoMovimentacao.equals(other.codigoMovimentacao))
+		} else if (!codigo.equals(other.codigo))
 			return false;
-		if (dataMovimentacao == null) {
-			if (other.dataMovimentacao != null)
+		if (data == null) {
+			if (other.data != null)
 				return false;
-		} else if (!dataMovimentacao.equals(other.dataMovimentacao))
+		} else if (!data.equals(other.data))
 			return false;
 		if (produto == null) {
 			if (other.produto != null)
 				return false;
 		} else if (!produto.equals(other.produto))
 			return false;
-		if (quantidadeMovimentacao == null) {
-			if (other.quantidadeMovimentacao != null)
+		if (quantidade == null) {
+			if (other.quantidade != null)
 				return false;
-		} else if (!quantidadeMovimentacao.equals(other.quantidadeMovimentacao))
+		} else if (!quantidade.equals(other.quantidade))
 			return false;
 		if (tipoOperacao != other.tipoOperacao)
 			return false;
@@ -156,10 +157,10 @@ public class MovimentacaoEstoque implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MovimentacaoEstoque [codigoMovimentacao=" + codigoMovimentacao
-				+ ", dataMovimentacao=" + dataMovimentacao + ", produto="
+		return "MovimentacaoEstoque [codigo=" + codigo
+				+ ", dataMovimentacao=" + data + ", produto="
 				+ produto + ", quantidadeMovimentacao="
-				+ quantidadeMovimentacao + ", tipoOperacao=" + tipoOperacao
+				+ quantidade + ", tipoOperacao=" + tipoOperacao
 				+ "]";
 	}
 	

@@ -22,27 +22,21 @@ public class Cliente implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Integer codigo;
+	
+	private String nome;
+	
+	private String cpfcnpj;
+
+	private Date dataNascimento;
+	
+	private Boolean indicadorAtivo = true;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CLI_SEQ")
 	@SequenceGenerator(name = "CLI_SEQ", sequenceName = "VITORSB.LJCLIENTE_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "CODCLI")
-	private Integer codigo;
-	
-	@Column(name = "DESNOM")
-	private String nome;
-	
-	@Column(name = "CPFCNPJ")
-	private String cpfcnpj;
-
-	
-	@Column(name = "DATNAS")
-	private Date dataNascimento;
-	
-	
-	@Column(name = "INDATV")
-	private Boolean indicadorAtivo = true;
-	
-	
 	public Integer getCodigo() {
 		return codigo;
 	}
@@ -51,6 +45,7 @@ public class Cliente implements Serializable{
 		this.codigo = codigo;
 	}
 
+	@Column(name = "DESNOM")
 	public String getNome() {
 		return nome;
 	}
@@ -66,6 +61,7 @@ public class Cliente implements Serializable{
 	    this.nome = nome;
 	}
 
+	@Column(name = "CPFCNPJ")
 	public String getCpfcnpj() {
 		return cpfcnpj;
 	}
@@ -77,6 +73,7 @@ public class Cliente implements Serializable{
 		this.cpfcnpj = cpfcnpj;
 	}
 
+	@Column(name = "DATNAS")
 	public Date getDataNascimento() {
 		return dataNascimento;
 	}
@@ -85,6 +82,7 @@ public class Cliente implements Serializable{
 		this.dataNascimento = dataNascimento;
 	}
 
+	@Column(name = "INDATV")
 	public Boolean getIndicadorAtivo() {
 		return indicadorAtivo;
 	}
