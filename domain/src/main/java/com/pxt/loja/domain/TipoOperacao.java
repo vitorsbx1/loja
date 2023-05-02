@@ -4,5 +4,7 @@ public enum TipoOperacao {
 
 	RECEBER,
 	ENTRADA,
-	VENDIDO;
+	VENDIDO,
+	DESFAZER_RECEBIMENTO,
+	DESFAZER_ENTRADA;
 }

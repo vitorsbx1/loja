@@ -71,20 +71,27 @@ public class ClienteBean extends CrudController<Cliente> {
 		if (getDomain().getDataNascimento().compareTo(dataAtualDate) > 0) {
 			throw new ValidationException("Data selecionada inválida, data maior que dia atual");
 		}
-		if(getDomain().retornaIdadeEmAno(getDomain().getDataNascimento(), dataAtualDate) == false){
+		if(!getDomain().retornaIdadeEmAno(getDomain().getDataNascimento(), dataAtualDate)){
 			throw new ValidationException("Cadastro não permitido para menores de 18 anos.");
+		}
+		if(getDomain().getCpfcnpj().length() == 11){
+			if(!getDomain().validaCaracteresCPF(getDomain().getCpfcnpj())){
+				throw new ValidationException("CPF inválido! Corrigir e cadastrar novamente.");
+			}
+			if(!getDomain().validarCPF(getDomain().getCpfcnpj())){
+				throw new ValidationException("CPF inválido! Corrigir e cadastrar novamente.");
+			}
+		}
+		if(getDomain().getCpfcnpj().length() == 14){
+			if(!getDomain().validaCaracteresCNPJ(getDomain().getCpfcnpj())){
+				throw new ValidationException("CNPJ inválido! Corrigir e cadastrar novamente.");
+			}
+			if(!getDomain().validarCNPJ(getDomain().getCpfcnpj())){
+				throw new ValidationException("CNPJ inválido! Corrigir e cadastrar novamente.");
+			}
 		}
 		if(getDomain().getCpfcnpj().length() != 11 && getDomain().getCpfcnpj().length() != 14){
 			throw new ValidationException("CPF/CNPJ inválido! Inserir 11 números para CPF ou 14 números para CNPJ.");
-		}
-		
-		if(clienteBO.verificarCpfCnpj(getDomain().getCpfcnpj()) == true){
-			if(getDomain().getCpfcnpj().length() == 11){
-				throw new ValidationException("CPF já existente! Cadastre outro.");
-			}else{
-				throw new ValidationException("CNPJ já existente! Cadastre outro.");
-			}
-			
 		}
 
 	}

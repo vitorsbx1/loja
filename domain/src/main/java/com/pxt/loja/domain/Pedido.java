@@ -93,32 +93,6 @@ public class Pedido implements Serializable {
 	public void setListaItens(List<ItemPedido> listaItens) {
 		this.listaItens = listaItens;
 	}
-
-
-/*	public void addItem(Produto produto, int quantidade) {
-		if(getListaItens() == null) {
-			this.listaItens = new ArrayList<ItemPedido>();
-		}
-		boolean achou = false;
-		for(ItemPedido item : getListaItens()) {
-			if(item.getId().getProduto().equals(produto)) {
-				achou = true;
-				item.adicionarQuantidade(quantidade);
-				break;
-			}
-		}
-		if(!achou) {
-			ItemPedido item = new ItemPedido();
-			ItemID itemId = new ItemID();
-			itemId.setPedido(this);
-			itemId.setProduto(produto);
-			item.setId(itemId);
-			item.setQuantidade(quantidade);
-			item.setValor(produto.getValor());
-			getListaItens().add(item);
-		}
-		
-	}*/
 	
 	public void removerItem(ItemPedido item) {
 		getListaItens().remove(item);

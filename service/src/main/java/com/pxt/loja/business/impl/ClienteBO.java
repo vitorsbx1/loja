@@ -26,7 +26,4 @@ public class ClienteBO {
 		return clienteDAO.buscar(cliente);
 	}
 	
-	public Boolean verificarCpfCnpj(String cpfcnpj) throws PersistenceException{
-		return clienteDAO.verificarCpfCnpj(cpfcnpj);
-	}
 }

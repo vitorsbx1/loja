@@ -45,7 +45,7 @@ public class MarcaDAO extends LOJAHibernateDAO<Marca, Integer>{
 					criteria.add(Restrictions.eq("codigo", marca.getCodigo()));
 				}
 				if(marca.getDescricao() != null && !marca.getDescricao().isEmpty()){
-					criteria.add(Restrictions.like("descricao", marca.getDescricao(), MatchMode.ANYWHERE));
+					criteria.add(Restrictions.like("descricao", marca.getDescricao(), MatchMode.ANYWHERE).ignoreCase());
 				}
 			}			
 			return criteria.list();

@@ -85,6 +85,64 @@ public class Fornecedor implements Serializable{
 		}
 		return retorno;
 	}
+	
+	public static boolean validarCNPJ(String cnpj) {
+	    if (cnpj == null || cnpj.length() != 14) {
+	        return false;
+	    }
+	    
+	    // Verifica se todos os caracteres são dígitos
+	    for (int i = 0; i < 14; i++) {
+	        if (!Character.isDigit(cnpj.charAt(i))) {
+	            return false;
+	        }
+	    }
+	    
+	    // Verifica se os dígitos verificadores estão corretos
+	    int[] digitosCNPJ = new int[14];
+	    for (int i = 0; i < 14; i++) {
+	        digitosCNPJ[i] = Character.getNumericValue(cnpj.charAt(i));
+	    }
+	    
+	    int soma = digitosCNPJ[0] * 5 + digitosCNPJ[1] * 4 + digitosCNPJ[2] * 3 + digitosCNPJ[3] * 2 +
+	               digitosCNPJ[4] * 9 + digitosCNPJ[5] * 8 + digitosCNPJ[6] * 7 + digitosCNPJ[7] * 6 +
+	               digitosCNPJ[8] * 5 + digitosCNPJ[9] * 4 + digitosCNPJ[10] * 3 + digitosCNPJ[11] * 2;
+	    
+	    int resultado1 = soma % 11;
+	    if (resultado1 < 2) {
+	        resultado1 = 0;
+	    } else {
+	        resultado1 = 11 - resultado1;
+	    }
+	    
+	    if (digitosCNPJ[12] != resultado1) {
+	        return false;
+	    }
+	    
+	    soma = digitosCNPJ[0] * 6 + digitosCNPJ[1] * 5 + digitosCNPJ[2] * 4 + digitosCNPJ[3] * 3 +
+	           digitosCNPJ[4] * 2 + digitosCNPJ[5] * 9 + digitosCNPJ[6] * 8 + digitosCNPJ[7] * 7 +
+	           digitosCNPJ[8] * 6 + digitosCNPJ[9] * 5 + digitosCNPJ[10] * 4 + digitosCNPJ[11] * 3 +
+	           digitosCNPJ[12] * 2;
+	    
+	    int resultado2 = soma % 11;
+	    if (resultado2 < 2) {
+	        resultado2 = 0;
+	    } else {
+	        resultado2 = 11 - resultado2;
+	    }
+	    
+	    return digitosCNPJ[13] == resultado2;
+	}
+	
+	public boolean validaCaracteresCNPJ(String cnpj) {    
+	    for (int i = 0; i < cnpj.length(); i++) {
+	        if (cnpj.charAt(i) != cnpj.charAt(0)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+	
 
 	@Override
 	public int hashCode() {

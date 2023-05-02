@@ -11,17 +11,20 @@
 		<ui:param name="titulo" value="Pedido de Mercadorias" />
 		<ui:param name="renderedEdit" value="false" />
 		<ui:param name="renderedDelete" value="false" />
-		
-		<ui:define name="btnFind"></ui:define>
+		<ui:define name="btnFind" />
 	
 		<ui:define name="panelCadastro">
-			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="35%;35%;20;10%" width="70%">
+			<pxt:panelGrid id="panelCodigoDescricao" columnsWidth="20%;25%;6%;10%;2%;14%;20%" width="100%">
 				<h:outputLabel value="Cliente:" styleClass="outputText" />
-				<h:outputLabel value="Produto:" styleClass="outputText" />	
-				<h:outputLabel value="Quantidade:" styleClass="outputText" />	
-				<h:outputLabel value="Valor Total Pedido: " style="background-color: #2DC26E" styleClass="outputText" />											
-
-			<pxtfl:searchField value="Pesquisar" id="searchCliente" searchProperty="nome" controller="#{pedidoMercadoriaBean.searchCliente}" modalTitle="Cliente" disabledOn="#{pedidoMercadoriaBean.disabledOnDefault}" width="95%">
+				<h:outputLabel value="Produto:" styleClass="outputText" />
+				<h:outputLabel value="Quantidade:" styleClass="outputText" />
+				<h:outputLabel value="" styleClass="outputText" />
+				<h:outputLabel value="" styleClass="outputText" />
+				<h:outputLabel value="" styleClass="outputText" />
+				<h:outputLabel value="" styleClass="outputText" />
+				
+				<ui:define name="cadastro" />
+			<pxtfl:searchField value="Pesquisar" id="searchCliente" searchProperty="nome" controller="#{pedidoMercadoriaBean.searchCliente}" modalTitle="Cliente" disabledOn="#{pedidoMercadoriaBean.isClienteDisabled()}" width="95%">
 				<ui:define name="filtros">
 					<pxt:panelGrid columnsWidth="10%;90%">
 						<h:outputText value="Código:" styleClass="outputText" />
@@ -70,35 +73,72 @@
 							columnWidth="80%" />
 					</ui:define>
 				</pxtfl:searchField>
-
-				<h:inputText value="#{pedidoMercadoriaBean.quantidade}" maxlength="10" style="width:100%" disabled="#{pedidoMercadoriaBean.disabledOnDefault}" >
+				
+				<h:inputText id="cmpQuantidade" value="#{pedidoMercadoriaBean.quantidade}" style="width:90%" maxlength="9" >
 					<pxt:onlyNumber />
 				</h:inputText>
 				
+				<a4j:commandLink render="panelItens,totalPedido,searchProduto,cmpQuantidade,searchCliente" actionListener="#{pedidoMercadoriaBean.adicionarItemPedido}">
+					<h:graphicImage title="Incrementar Item" url="/resources/img/add-to-cart.png" style="margin-top: -8px"/>
+					<a4j:ajax execute="@form" listener="#{pedidoMercadoriaBean.atualizaCarrinhoVazio}" render="@form" />
+				</a4j:commandLink>
+				
+				<h:graphicImage title="Carrinho" name="#{pedidoMercadoriaBean.carrinhoImagem}" library="img" style="border-width: 0px;" />
+				<h:outputText value="Itens no Carrinho: #{pedidoMercadoriaBean.quantidadeItensCarrinho}"/>
+				<h:outputText value="Total Pedido: R$ #{pedidoMercadoriaBean.totalPedidoFormatado}" style="font-weight:bold; font-style:italic; font-size:17px; padding:3px;"/>
+				
+
 			</pxt:panelGrid>
-			
 			<pxt:panelGrid id="panelItens" columnsWidth="100%" width="100%">
 				<rich:panel id="tabPanelItens" bodyClass="pxt-rich-body-panel-detail zeroBodySpace">	
 					<rich:dataTable id="tabelaItens" var="itemPedido" rowClasses="pxt-odd-row, pxt-even-row" value="#{pedidoMercadoriaBean.domain.listaItens}" styleClass="stable" footerClass="pxt-rf-dt-ftr-c" rowKeyVar="keyVar" rows="14" render="tabelaProdutosScroller">
 						<ui:param name="columnGroupId" value="tabelaItens" />
-							<pxtfl:column headerValue="Código" value="#{itemPedido.produtoNaoNulo.codigo}" textAlign="center" />
-							<pxtfl:column headerValue="Descrição" value="#{itemPedido.produtoNaoNulo.descricao}" textAlign="center" />
-							<pxtfl:column headerValue="Tamanho" value="#{itemPedido.produtoNaoNulo.tamanho}" textAlign="center" />
-							<pxtfl:column headerValue="Marca" value="#{itemPedido.produtoNaoNulo.marca}" textAlign="center" />
-							<pxtfl:column headerValue="Fornecedor" value="#{itemPedido.produtoNaoNulo.fornecedor}" textAlign="center" />
-							<pxtfl:column headerValue="Modelo" value="#{itemPedido.produtoNaoNulo.modelo}" textAlign="center" />
-							<pxtfl:column headerValue="Cor" value="#{itemPedido.produtoNaoNulo.cor}" textAlign="center" />
-							<pxtfl:column headerValue="Quantidade" value="#{itemPedido.quantidade}" textAlign="center"/>
-							<pxtfl:column headerValue="Valor" value="#{itemPedido.valor}" typeFormat="currency" textAlign="center"/>
-							<rich:column>
-								<h:commandButton value="Excluir" action="#{pedidoMercadoriaBean.domain.removerItem}" render="panelItens"  /> 
+							<pxtfl:column headerValue="Código" value="#{itemPedido.id.produto.codigo}" textAlign="center"/>
+							<pxtfl:column headerValue="Descrição" value="#{itemPedido.id.produto.descricao}" textAlign="center" />
+							<rich:column id="btnIncrementar" style="text-align: right; width: 1%;">
+								<a4j:commandLink render="panelItens,totalPedido" actionListener="#{pedidoMercadoriaBean.adicionarQuantidade(itemPedido)}">
+								 	<h:graphicImage title="Incrementar Item" url="/resources/img/plus.png" style="border-width: 0px;"/>
+								</a4j:commandLink>
+							</rich:column>
+							<rich:column id="idQuantidade" style="text-align: center; width: 5%;">
+					  	    	<f:facet name="header">
+									<h:outputText value="Quantidade" />
+								</f:facet>
+								<pxtfl:column id="clnQuantidade" value="#{itemPedido.quantidade}" textAlign="center" style="width: 5%" rendered="#{!pedidoMercadoriaBean.editarCampoQuantidade}"/>
+									<h:inputText id="inpQuantidade" value="#{itemPedido.quantidade}"  textAlign="center" style="width: 185px%;" rendered="#{pedidoMercadoriaBean.editarCampoQuantidade}" maxlength="9">
+										<pxt:onlyNumber/>
+									</h:inputText>
+							</rich:column>
+							<rich:column id="btnDecrementar" style="text-align: right; width: 1%;">
+								<a4j:commandLink render="panelItens,totalPedido" actionListener="#{pedidoMercadoriaBean.removerQuantidade(itemPedido)}">
+								 	<h:graphicImage title="Decrementar Item" url="/resources/img/minus.png" style="border-width: 0px;"/>
+								</a4j:commandLink>
+							</rich:column>
+							<pxtfl:column headerValue="Valor Unitário" value="#{itemPedido.valor}" typeFormat="currency" textAlign="center"/>
+							<pxtfl:column headerValue="Valor Total" value="#{itemPedido.subTotalItem}" typeFormat="currency" textAlign="center"/>
+								
+							<rich:column id="btnRemover" style="text-align: right; width: 1%;">
+							  <a4j:commandLink render="panelItens,totalPedido" actionListener="#{pedidoMercadoriaBean.removerItemPedidoBean(itemPedido)}">
+							    <h:graphicImage title="Remover Item" url="/resources/img/shopping-cart.png" style="border-width: 0px;"/>
+							    <a4j:ajax execute="@form" listener="#{pedidoMercadoriaBean.atualizaCarrinhoVazio}" render="@form" />
+							  </a4j:commandLink>
+							</rich:column>
+								
+							<rich:column id="btnEditar" style="text-align: right; width: 1%;">
+								<a4j:commandLink id="btnEditarQuantidade" execute="@region" render="tabelaItens,idQuantidade,btnEditar,btnEditarQuantidade,btnSalvarEdicao, inpQuantidade, clnQuantidade,panelItens,totalPedido" 
+							   		actionListener="#{pedidoMercadoriaBean.editarItem(itemPedido)}" rendered="#{!pedidoMercadoriaBean.editarCampoQuantidade}">
+									<h:graphicImage title="Editar quantidade" name="editar_16x16.png" library="pxt.framework.faces.img" style="border-width: 0px;" />
+								</a4j:commandLink>
+								<a4j:commandLink id="btnSalvarEdicao" execute="@region" render="tabelaItens,idQuantidade,btnEditar,btnEditarQuantidade,btnSalvarEdicao, inpQuantidade, clnQuantidade,panelItens,totalPedido" 
+							   		actionListener="#{pedidoMercadoriaBean.salvarEdicaoItem(itemPedido)}" rendered="#{pedidoMercadoriaBean.editarCampoQuantidade}">
+									<h:graphicImage title="Salvar edição" name="salvar_16x16.png" library="pxt.framework.faces.img" style="border-width: 0px;" />
+								</a4j:commandLink>
 							</rich:column>
 					</rich:dataTable>
 				</rich:panel>
 			</pxt:panelGrid>
-		</ui:define>
+		</ui:define>	
 		
-		<ui:define name="table" />
-		
-		</ui:composition>
+		<ui:define name="table"/>		
+	</ui:composition>
 </html>

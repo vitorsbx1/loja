@@ -44,16 +44,22 @@ public class MovimentacaoBO {
 
 		estoque = criaEstoqueNulo(movimentacaoEstoque, estoque);
 		
-		if(movimentacaoEstoque.getTipoOperacao() == TipoOperacao.RECEBER){
+		if(movimentacaoEstoque.getTipoOperacao().equals(TipoOperacao.RECEBER)){
 			realizaRecebimento(movimentacaoEstoque, estoque);
 		}
 		
-		if(movimentacaoEstoque.getTipoOperacao() == TipoOperacao.ENTRADA){
+		if(movimentacaoEstoque.getTipoOperacao().equals(TipoOperacao.ENTRADA)){
 			realizaEntrada(movimentacaoEstoque, estoque);
 		}
 		
-		if(movimentacaoEstoque.getTipoOperacao() == TipoOperacao.VENDIDO){
+		if(movimentacaoEstoque.getTipoOperacao().equals(TipoOperacao.VENDIDO)){
 			realizaVenda(movimentacaoEstoque, estoque);
+		}
+		if(movimentacaoEstoque.getTipoOperacao().equals(TipoOperacao.DESFAZER_RECEBIMENTO)){
+			realizaCorrecaoRecebimento(movimentacaoEstoque, estoque);
+		}
+		if(movimentacaoEstoque.getTipoOperacao().equals(TipoOperacao.DESFAZER_ENTRADA)){
+			realizaCorrecaoEntrada(movimentacaoEstoque, estoque);
 		}
 		
 		movimentacaoEstoque.setData(dataMovimentacao);
@@ -90,6 +96,16 @@ public class MovimentacaoBO {
 			}
 			estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento()	+ movimentacaoEstoque.getQuantidade());
 	}
+	
+	private void realizaCorrecaoRecebimento(MovimentacaoEstoque movimentacaoEstoque, Estoque estoque) throws ValidationException {
+		if (movimentacaoEstoque.getQuantidade() == 0) {
+			throw new ValidationException("Não é possível inserir valor zerado para Correção de Recebimento");
+		}
+		if(estoque.getQuantidadeRecebimento() < movimentacaoEstoque.getQuantidade()){
+			throw new ValidationException("Quantidade para correção informada maior que quantidade em Recebimento: " + estoque.getQuantidadeRecebimento());
+		}
+		estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento()	- movimentacaoEstoque.getQuantidade());
+}
 
 	private void realizaEntrada(MovimentacaoEstoque movimentacaoEstoque,Estoque estoque) throws ValidationException {
 			if (movimentacaoEstoque.getQuantidade() == 0) {
@@ -102,6 +118,19 @@ public class MovimentacaoBO {
 			estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento() - movimentacaoEstoque.getQuantidade());
 	}
 	
+	private void realizaCorrecaoEntrada(MovimentacaoEstoque movimentacaoEstoque,Estoque estoque) throws ValidationException {
+		if (movimentacaoEstoque.getQuantidade() == 0) {
+			throw new ValidationException("Não é possível inserir valor zerado para Correção de Entrada");
+		}
+		if (movimentacaoEstoque.getQuantidade() > estoque.getQuantidadeRecebimento()) {
+			throw new ValidationException("Não é possível inserir valor superior a quantidade em Recebimento: "	+ estoque.getQuantidadeRecebimento());
+		}
+		if (movimentacaoEstoque.getQuantidade() > estoque.getQuantidadeProduto()) {
+			throw new ValidationException("Não é possível inserir valor superior a quantidade em Estoque: "	+ estoque.getQuantidadeProduto());
+		}
+		estoque.setQuantidadeProduto(estoque.getQuantidadeProduto()	- movimentacaoEstoque.getQuantidade());
+		estoque.setQuantidadeRecebimento(estoque.getQuantidadeRecebimento() + movimentacaoEstoque.getQuantidade());
+}
 	
 	private void realizaVenda(MovimentacaoEstoque movimentacaoEstoque,Estoque estoque) throws ValidationException {
 			if (movimentacaoEstoque.getQuantidade() == 0) {

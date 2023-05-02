@@ -127,7 +127,7 @@ public class ProdutoBean extends CrudController<Produto> {
 		return searchFornecedor;
 	}
 
-	protected void valida() throws ValidationException {
+	protected void valida() throws ValidationException, PersistenceException{
 		if (getDomain().getDescricao() == null || getDomain().getDescricao().isEmpty()) {
 			throw new ValidationException("A Descrição é um campo obrigatório");
 		}
@@ -152,6 +152,9 @@ public class ProdutoBean extends CrudController<Produto> {
 		}
 		if (getDomain().getValor() == null) {
 			throw new ValidationException("O valor é um campo obrigatório");
+		}
+		if (produtoBO.produtoDuplicadoExists(getDomain().getDescricao(), getDomain().getMarca(), getDomain().getFornecedor(), getDomain().getTamanho())){
+			throw new ValidationException("O produto inserido já encontra-se cadastrado.");
 		}
 	}
 	
@@ -191,6 +194,9 @@ public class ProdutoBean extends CrudController<Produto> {
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			msgWarn(e.getMessage());
+		} catch (PersistenceException e) {
+			e.printStackTrace();
+			 msgError(e, e.getMessage());
 		}
 	}
 }

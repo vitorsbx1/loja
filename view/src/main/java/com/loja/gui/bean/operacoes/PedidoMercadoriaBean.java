@@ -1,12 +1,14 @@
 package com.loja.gui.bean.operacoes;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
+import javax.validation.constraints.Min;
 
 import pxt.framework.business.PersistenceService;
 import pxt.framework.faces.controller.CrudController;
@@ -52,6 +54,10 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 	private Produto produto;
 	private Integer quantidade;
 	private Boolean isClienteEnabled = false;
+	private BigDecimal totalPedido = BigDecimal.ZERO;
+	private Boolean editarCampoQuantidade = false;
+	private Boolean carrinhoVazio = true;
+	private Integer quantidadeItensCarrinho = 0;
 	
 	@Override
 	public Pedido getDomain() {
@@ -77,6 +83,7 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 		this.produto = produto;
 	}
 	
+	@Min(value = 0, message = "A quantidade deve ser positiva!")
 	public Integer getQuantidade() {
 		return quantidade;
 	}
@@ -84,7 +91,7 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
-
+	
 	@Override
 	public PersistenceService getPersistenceService() {
 		return persistenceService;
@@ -102,65 +109,120 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 		return !domain.getListaItens().isEmpty() || !isClienteEnabled;
 	}
 
+	public BigDecimal getTotalPedido() {
+		return totalPedido;
+	}
+
+	public void setTotalPedido(BigDecimal totalPedido) {
+		this.totalPedido = totalPedido;
+	}
+	
+	public String getTotalPedidoFormatado(){
+		DecimalFormat formatador = new DecimalFormat("#,##0.00");
+		return formatador.format(getTotalPedido());
+	}
+	
+	public Boolean getEditarCampoQuantidade() {
+		return editarCampoQuantidade;
+	}
+
+	public void setEditarCampoQuantidade(Boolean editarCampoQuantidade) {
+		this.editarCampoQuantidade = editarCampoQuantidade;
+	}
 	
 	
+	public Boolean getCarrinhoVazio() {
+		return carrinhoVazio;
+	}
+
+	public void setCarrinhoVazio(Boolean carrinhoVazio) {
+		this.carrinhoVazio = carrinhoVazio;
+	}
 	
+	public void atualizaCarrinhoVazio(){
+		if(domain.getListaItens().isEmpty()){
+			carrinhoVazio = true;
+		}else{
+			carrinhoVazio = false;
+		}
+	}
+	
+	public String getCarrinhoImagem(){
+		return carrinhoVazio ? "carrinho-vazio.png" : "carrinho-cheio.png";
+	}
+
+	public Integer getQuantidadeItensCarrinho() {
+		return quantidadeItensCarrinho;
+	}
+
+	public void setQuantidadeItensCarrinho(Integer quantidadeItensCarrinho) {
+		this.quantidadeItensCarrinho = quantidadeItensCarrinho;
+	}
+
 	public SearchFieldController<Cliente> getSearchCliente() {
 		if (searchCliente == null) {
-			searchCliente = new SearchFieldController<Cliente>(this.persistenceService, Cliente.class) {
-				
+			searchCliente = new SearchFieldController<Cliente>(getPersistenceService()) {
+
 				/**
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				
+
 				@Override
 				public void setObject(Cliente cliente) {
 					getDomain().setCliente(cliente);
 				}
-				
+
 				@Override
 				public Cliente getObject() {
 					return getDomain().getClienteNaoNulo();
 				}
-				
+
 				@Override
 				public void buscar() throws Exception {
 					setResultList((List<Cliente>) persistenceService.findByExample(((Cliente) getSearchObject())));
 				}
+
+				@Override
+				public void limpar() {
+					super.limpar();
+				}
 			};
 		}
-		return searchCliente;
+		return this.searchCliente;
 	}
-	
+
 	public SearchFieldController<Produto> getSearchProduto() {
 		if (searchProduto == null) {
 			searchProduto = new SearchFieldController<Produto>(getPersistenceService()) {
-				
+
 				/**
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				
+
 				@Override
 				public void setObject(Produto produto) {
 					setProduto(produto);
 				}
-				
+
 				@Override
 				public Produto getObject() {
 					return getProduto();
 				}
-				
+
 				@Override
 				public void buscar() throws Exception {
-					setResultList((List<Produto>) pedidoBO.buscarProdutoEstoqueDiponivelExists());
+					setResultList((List<Produto>) pedidoBO.buscarProdutoEstoqueDiponivelExists((Produto) getSearchObject()));
 				}
-				
-				
+
+				@Override
+				public void limpar() {
+					super.limpar();
+				}
 			};
 		}
-		return searchProduto;
+		return this.searchProduto;
 	}
 	
 	public void validarCampos() throws ValidationException {
@@ -188,7 +250,7 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 				throw new ValidationException("Produto não encontrado no estoque!");
 			}
 			if(estoque.getQuantidadeProduto() < quantidade){
-				throw new ValidationException("Quantidade informada maior que quantidade disponível em estoque: " + quantidade);
+				throw new ValidationException("Quantidade informada maior que quantidade disponível em estoque: " + estoque.getQuantidadeProduto());
 			}
 			
 			for(ItemPedido itemPedido : domain.getListaItens()){
@@ -202,14 +264,25 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 			item.setProduto(getProduto());
 			item.setQuantidade(getQuantidade());
 			item.setValor(getProduto().getValor());
+			item.setSubTotalItem(item.getValor().multiply(BigDecimal.valueOf(item.getQuantidade())));
+			BigDecimal subTotalAtualizar = item.getValor().multiply(BigDecimal.valueOf(item.getQuantidade()));
 			
 			domain.getListaItens().add(item);
 			
-			BigDecimal subTotalPedido = produto.getValor().multiply(BigDecimal.valueOf(quantidade));
+			totalPedido = totalPedido.add(subTotalAtualizar);
+			
+			if(domain.getListaItens().isEmpty()){
+				setCarrinhoVazio(true);
+			}else{
+				setCarrinhoVazio(false);
+			}
+			
+			setQuantidadeItensCarrinho(domain.getListaItens().size());
 			
 			msgInfo("Item inserido com sucesso!");
 			searchProduto.limpar();
 			setQuantidade(null);
+			
 		}catch(PersistenceException e){
 			msgError(e, e.getMessage());
 		}catch(ValidationException e){
@@ -217,16 +290,137 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 			msgWarn(e.getMessage());
 		}
 	}
+	
+	public void adicionarQuantidade(ItemPedido item) {
+		try {
+			Estoque estoque;
+			estoque = estoqueBO.buscarProdutoCodigo(item.getProdutoNaoNulo().getCodigo());
+			Integer novaQuantidade = item.getQuantidade() + 1;
+			if (estoque.getQuantidadeProduto() < novaQuantidade) {
+				throw new ValidationException("Quantidade não pode ser superior à quantidade disponível: " + estoque.getQuantidadeProduto());
+			} else {
+				item.setQuantidade(novaQuantidade);
+			}
+			BigDecimal valorAlterar = item.getValor().multiply(BigDecimal.valueOf(item.getQuantidade()));
+			item.setSubTotalItem(valorAlterar);
+			totalPedido = getTotalPedido().add(item.getValor());
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			msgWarn(e.getMessage());
+		} catch (Exception e) {
+			msgError(e, e.getMessage());
+		}
+	}
+	
+	
+	public void removerQuantidade(ItemPedido item) {
+		try {
+			Integer novaQuantidade = item.getQuantidade() - 1;
+			if (novaQuantidade <= 0) {
+				throw new ValidationException("Produto não pode ficar com quantidade igual a 0!");
+			} else {
+				item.setQuantidade(item.getQuantidade() - 1);
+			}
+			BigDecimal valorAlterar = item.getValor().multiply(BigDecimal.valueOf(item.getQuantidade()));
+			item.setSubTotalItem(valorAlterar);
+			totalPedido = getTotalPedido().subtract(item.getValor());
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			msgWarn(e.getMessage());
+		} catch (Exception e) {
+			msgError(e, e.getMessage());
+		}
+	}
+	
+	public void removerItemPedidoBean(ItemPedido item){
+		try{
+			if(getEditarCampoQuantidade() == true){
+				throw new ValidationException("Para remover o item do Pedido, cancelar operação de edição.");
+			}
+			domain.getListaItens().remove(item);
+			
+			if(domain.getListaItens().isEmpty()){
+				setCarrinhoVazio(true);
+			}else{
+				setCarrinhoVazio(false);
+			}
+			
+			setQuantidadeItensCarrinho(domain.getListaItens().size());
+			
+			BigDecimal valorRemover = item.getSubTotalItem();
+			totalPedido = getTotalPedido().subtract(valorRemover);
+			msgInfo("Item removido com sucesso!");
+		}catch(ValidationException e){
+			msgWarn(e.getMessage());
+			e.printStackTrace();
+		}catch(Exception e){
+			msgError(e, e.getMessage());
+		}
 		
+	}
+		
+	public void editarItem(ItemPedido item) {
+		setEditarCampoQuantidade(true);
+	}
+	
+	
+	
+	public void editarItemQuantidade(ItemPedido item) throws ValidationException {
+		
+		if (item.getQuantidade() == null || item.getQuantidade() <= 0) {
+			throw new ValidationException("Quantidade não pode ser vazia, e menor ou igual a 0!");
+		}
+		for(ItemPedido itemPedido : domain.getListaItens()) {
+			if(itemPedido.getProdutoNaoNulo().getCodigo() == item.getProdutoNaoNulo().getCodigo()) {
+				totalPedido = getTotalPedido().subtract(itemPedido.getSubTotalItem());
+				itemPedido.setQuantidade(item.getQuantidade());
+				BigDecimal novoValor = itemPedido.getValor().multiply(BigDecimal.valueOf(itemPedido.getQuantidade()));
+				itemPedido.setSubTotalItem(novoValor);
+				totalPedido = getTotalPedido().add(item.getSubTotalItem());
+				break;
+			}
+		}
+	}
+	
+	public void salvarEdicaoItem(ItemPedido item) {
+		try {
+			editarItemQuantidade(item);
+			setEditarCampoQuantidade(false);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			msgWarn(e.getMessage());
+		} catch (Exception e) {
+			msgError(e, e.getMessage());
+		}
+	}
+	
+	@Override
+	protected void novo() {
+		searchCliente.limpar();
+		searchProduto.limpar();
+		getDomain().getListaItens().clear();
+		totalPedido = BigDecimal.ZERO;
+		setClienteEnabled(true);
+		setQuantidade(null);
+		setCarrinhoVazio(true);
+		setQuantidadeItensCarrinho(0);
+		super.novo();
+	}
+	
 	@Override
 	public void salvar(ActionEvent arg0) {
 		try{
-			pedidoBO.salvarPedido(getDomain());
-			msgInfo("Pedido efetuado com sucesso");
+			if(getDomain().getListaItens().isEmpty()){
+				msgWarn("Não é possível salvar pedido sem itens!");
+			}else{
+				pedidoBO.salvarPedido(getDomain());
+				msgInfo("Pedido efetuado com sucesso");
+			}
 			this.configuraEstado(CrudState.ST_DEFAULT);
 		}catch(PersistenceException e){
 			e.printStackTrace();
 			msgError(e, e.getMessage());
 		}
 	}
+	
 }

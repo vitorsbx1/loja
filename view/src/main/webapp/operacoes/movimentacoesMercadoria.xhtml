@@ -19,7 +19,7 @@
 				<h:outputLabel value="Operação:" styleClass="outputText" />	
 				<h:outputLabel value="Quantidade:" styleClass="outputText" />	
 			
-			<h:inputText value="#{movimentacoesMercadoriaBean.domain.codigo}" style="width:85%" disabled="#{movimentacoesMercadoriaBean.disabledOnDefault}" >
+			<h:inputText value="#{movimentacoesMercadoriaBean.domain.codigo}" style="width:85%" disabled="#{movimentacoesMercadoriaBean.disabledOnInsEdi}" >
 			</h:inputText>														
 
 			<pxtfl:searchField value="Pesquisar" id="searchProduto" searchProperty="descricao" controller="#{movimentacoesMercadoriaBean.searchProduto}" modalTitle="Produto" disabledOn="#{movimentacoesMercadoriaBean.disabledOnDefault}" width="90%">
@@ -52,7 +52,7 @@
 					<f:selectItems value="#{movimentacoesMercadoriaBean.tipoOperacoes}" var="obj" itemLabel="#{obj}"/>
 				</h:selectOneMenu>
 				
-				<h:inputText value="#{movimentacoesMercadoriaBean.domain.quantidade}" maxlength="10" style="width:100%" disabled="#{movimentacoesMercadoriaBean.disabledOnDefault}" >
+				<h:inputText value="#{movimentacoesMercadoriaBean.domain.quantidade}" maxlength="9" style="width:100%" disabled="#{movimentacoesMercadoriaBean.disabledOnDefault}" >
 					<pxt:onlyNumber />
 				</h:inputText>
 			</pxt:panelGrid>
@@ -63,6 +63,7 @@
 			<pxtfl:column headerValue="Data" value="#{obj.data}" typeFormat="date" patternFormat="dd/MM/yyyy HH:mm:ss" maxWidth="110px"/>
 			<pxtfl:column headerValue="Produto" value="#{obj.produto.descricao}" />
 			<pxtfl:column headerValue="Tipo Operação" value="#{obj.tipoOperacao}" />
+			<pxtfl:column headerValue="Qtde Movimentada" value="#{obj.quantidade}" />
 		</ui:define>		
 	</ui:composition>
 </html>

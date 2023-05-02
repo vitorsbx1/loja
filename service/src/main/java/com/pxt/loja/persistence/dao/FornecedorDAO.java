@@ -47,29 +47,18 @@ public class FornecedorDAO extends LOJAHibernateDAO<Fornecedor, Integer>{
 					criteria.add(Restrictions.eq("codigo", fornecedor.getCodigo()));
 				}
 				if(fornecedor.getNome() != null && !fornecedor.getNome().isEmpty()){
-					criteria.add(Restrictions.like("nome", fornecedor.getNome(), MatchMode.ANYWHERE));
+					criteria.add(Restrictions.like("nome", fornecedor.getNome(), MatchMode.ANYWHERE).ignoreCase());
 				}
 				if(fornecedor.getCnpj() != null && !fornecedor.getCnpj().isEmpty()){
 					criteria.add(Restrictions.eq("cnpj", fornecedor.getCnpj()));
+				}
+				if(fornecedor.getIndicadorAtivo() || !fornecedor.getIndicadorAtivo()){
+					criteria.add(Restrictions.eq("indicadorAtivo", fornecedor.getIndicadorAtivo()));
 				}
 			}			
 			return criteria.list();
 		}catch(Exception e){
 			throw new PersistenceException("Não foi possível buscar Fornecedor", e);
-		}
-	}
-	
-	public Boolean validaCnpj(String cnpj) throws PersistenceException{
-		try{
-			Criteria criteria = getSession().createCriteria(Fornecedor.class);
-			
-			if(cnpj != null){
-				criteria.add(Restrictions.eq("cnpj", cnpj));
-			}
-			Fornecedor fornecedor = (Fornecedor) criteria.uniqueResult();
-			return fornecedor != null;
-		}catch(Exception e){
-			throw new PersistenceException("Não foi possível validar CPNJ.", e);
 		}
 	}
 	

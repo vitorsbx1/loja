@@ -9,6 +9,7 @@
 		<ui:param name="form_id" value="formProduto" />
 		<ui:param name="backingBean" value="#{produtoBean}" />
 		<ui:param name="titulo" value="Produto" />
+		<ui:param name="renderedDelete" value="false" />
 	
 		<ui:define name="panelCadastro">
 			
@@ -97,7 +98,7 @@
 				<h:outputLabel value="Valor:" styleClass="outputText" />
 				
 				<h:inputText value="#{produtoBean.domain.modelo}" style="width:94%" maxlength="18" disabled="#{produtoBean.disabledOnDefault}" tabindex="6">
-					<pxt:upperCase />
+					<pxt:upperCase/>
 				</h:inputText> 
 					
 				<h:selectOneMenu value="#{produtoBean.domain.tamanho}" style="width:95%" converter="defaultConverter"  disabled="#{produtoBean.disabledOnDefault}" tabindex="7">

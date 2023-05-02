@@ -26,7 +26,4 @@ public class FornecedorBO {
 		return fornecedorDAO.buscar(fornecedor);
 	}
 	
-	public Boolean validaCnpj(String cnpj) throws PersistenceException{
-		return fornecedorDAO.validaCnpj(cnpj);
-	}
 }

@@ -81,14 +81,15 @@ public class MovimentacaoEstoque implements Serializable {
 	}
 
 	@Column(name = "QDEMOV")
-	@Min(value = 0, message = "A quantidade deve ser positivo!")
+	@Min(value = 0, message = "A quantidade deve ser positiva!")
 	public Integer getQuantidade() {
 		return quantidade;
 	}
 
+
 	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
+        this.quantidade = quantidade;
+    }
 
 	@Column(name = "DESOPE")
 	@Enumerated(EnumType.STRING)

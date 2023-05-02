@@ -12,9 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import pxt.framework.persistence.PersistenceException;
-import pxt.framework.validation.ValidationException;
 
-import com.pxt.loja.domain.Estoque;
 import com.pxt.loja.domain.ItemPedido;
 import com.pxt.loja.domain.MovimentacaoEstoque;
 import com.pxt.loja.domain.Pedido;
@@ -48,8 +46,8 @@ public class PedidoBO {
 		return pedidoDAO.buscarProdutoEstoqueDiponivel();
 	}
 	
-	public List<Produto> buscarProdutoEstoqueDiponivelExists() throws PersistenceException{
-		return pedidoDAO.buscarProdutoEstoqueDiponivelExists();
+	public List<Produto> buscarProdutoEstoqueDiponivelExists(Produto produto) throws PersistenceException{
+		return pedidoDAO.buscarProdutoEstoqueDiponivelExists(produto);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)

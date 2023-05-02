@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -46,7 +47,7 @@ public class PedidoDAO extends GenericDAO{
 	}
 	
 	//METODO COM SUBSELECT E EXISTS
-	public List<Produto> buscarProdutoEstoqueDiponivelExists() throws PersistenceException{
+	public List<Produto> buscarProdutoEstoqueDiponivelExists(Produto produto) throws PersistenceException{
 		try{
 		//Criar subselect com exists para a tabela VITORSB.TLJESTOQUE
 		DetachedCriteria subSelect = DetachedCriteria.forClass(Estoque.class, "estoque");
@@ -58,6 +59,14 @@ public class PedidoDAO extends GenericDAO{
 		Criteria criteria = getSession().createCriteria(Produto.class, "pr");
 		criteria.add(Subqueries.exists(subSelect));
 		
+		 // Adicionar restrições de código e quantidade
+        if (produto != null && produto.getCodigo() != null) {
+            criteria.add(Restrictions.eq("codigo", produto.getCodigo()));
+        }
+        
+        if (produto != null && produto.getDescricao() !=null && !produto.getDescricao().isEmpty()){
+        	criteria.add(Restrictions.like("descricao", produto.getDescricao(), MatchMode.ANYWHERE));
+        }		
 		//Executar
 		List<Produto> listaProdutos = criteria.list();
 		return listaProdutos;

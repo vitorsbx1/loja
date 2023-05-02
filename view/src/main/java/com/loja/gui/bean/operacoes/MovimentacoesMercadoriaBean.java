@@ -1,5 +1,6 @@
 package com.loja.gui.bean.operacoes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,7 +99,8 @@ public class MovimentacoesMercadoriaBean extends CrudController<MovimentacaoEsto
 	
 	public List<TipoOperacao> getTipoOperacoes() {
 		if (tipoOperacoes == null) {
-			tipoOperacoes = Arrays.asList(TipoOperacao.values());
+			tipoOperacoes = new ArrayList<>(Arrays.asList(TipoOperacao.values()));
+			tipoOperacoes.remove(TipoOperacao.VENDIDO);
 		}
 		return tipoOperacoes;
 	}
@@ -114,6 +116,7 @@ public class MovimentacoesMercadoriaBean extends CrudController<MovimentacaoEsto
 		if(getDomain().getTipoOperacao() == null){
 			throw new ValidationException("Operações é um campo obrigatório");
 		}
+	
 	}
 	
 	@Override

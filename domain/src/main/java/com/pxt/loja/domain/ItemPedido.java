@@ -20,7 +20,8 @@ public class ItemPedido implements Serializable {
 	private Integer quantidade;
 	
 	private BigDecimal valor;
-		
+	
+	private BigDecimal subTotalItem;
 
 	@EmbeddedId
 	public ItemID getId() {
@@ -79,6 +80,17 @@ public class ItemPedido implements Serializable {
 	public void setPedido(Pedido pedido) {
 		getItemIdNaoNulo().setPedido(pedido);
 	}
+
+	@Transient
+	public BigDecimal getSubTotalItem() {
+		return subTotalItem;
+	}
+
+	public void setSubTotalItem(BigDecimal subTotalItem) {
+		this.subTotalItem = subTotalItem;
+	}
+	
+	
 	
 	
 }

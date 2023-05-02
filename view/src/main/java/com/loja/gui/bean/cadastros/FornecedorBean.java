@@ -15,7 +15,7 @@ import pxt.framework.validation.ValidationException;
 import com.pxt.loja.business.impl.FornecedorBO;
 import com.pxt.loja.domain.Fornecedor;
 
-
+@SuppressWarnings("all")
 @ManagedBean
 @ViewScoped
 public class FornecedorBean extends CrudController<Fornecedor>{
@@ -57,14 +57,14 @@ public class FornecedorBean extends CrudController<Fornecedor>{
 		if(getDomain().getNome() == null || getDomain().getNome().isEmpty()){
 			throw new ValidationException("O Nome é um campo obrigatório");
 		}
-		if(getDomain().getCnpj() == null || getDomain().getCnpj().isEmpty()){
-			throw new ValidationException("O CNPJ é um campo obrigatório");
-		}
 		if(getDomain().getCnpj().length() != 14){
 			throw new ValidationException("CNPJ inválido! Necessário inserir 14 números para CNPJ");
 		}
-		if(fornecedorBO.validaCnpj(getDomain().getCnpj()) == true){
-			throw new ValidationException("CNPJ já existente! Cadastre outro.");
+		if(!getDomain().validaCaracteresCNPJ(getDomain().getCnpj())){
+			throw new ValidationException("CNPJ inválido! Corrigir e cadastrar novamente.");
+		}
+		if(!getDomain().validarCNPJ(getDomain().getCnpj())){
+			throw new ValidationException("CNPJ inválido! Corrigir e cadastrar novamente.");
 		}
 	}
 

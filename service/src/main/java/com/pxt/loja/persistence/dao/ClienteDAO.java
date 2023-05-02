@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import pxt.framework.business.PersistenceService;
@@ -15,7 +16,6 @@ import pxt.framework.business.TransactionException;
 import pxt.framework.persistence.PersistenceException;
 
 import com.pxt.loja.domain.Cliente;
-import com.pxt.loja.domain.Produto;
 
 @SuppressWarnings("all")
 @Stateless
@@ -44,10 +44,13 @@ public class ClienteDAO extends LOJAHibernateDAO<Cliente, Integer> {
 					criteria.add(Restrictions.eq("codigo", cliente.getCodigo()));
 				}
 				if (cliente.getNome() != null && !cliente.getNome().isEmpty()) {
-					criteria.add(Restrictions.like("nome", cliente.getNome(),MatchMode.ANYWHERE));
+					criteria.add(Restrictions.like("nome", cliente.getNome(),MatchMode.ANYWHERE).ignoreCase());
 				}
 				if (cliente.getCpfcnpj() != null && !cliente.getCpfcnpj().isEmpty()) {
 					criteria.add(Restrictions.eq("cpfcnpj",cliente.getCpfcnpj()));
+				}
+				if (cliente.getIndicadorAtivo() || !cliente.getIndicadorAtivo()){
+					criteria.add(Restrictions.eq("indicadorAtivo", cliente.getIndicadorAtivo()));
 				}
 			}
 			return criteria.list();
@@ -56,19 +59,5 @@ public class ClienteDAO extends LOJAHibernateDAO<Cliente, Integer> {
 		}
 	}
 
-	public Boolean verificarCpfCnpj(String cpfcnpj) throws PersistenceException {
-		try {
-			Criteria criteria = getSession().createCriteria(Cliente.class);
-
-			if (cpfcnpj != null) {
-				criteria.add(Restrictions.eq("cpfcnpj", cpfcnpj));
-			}
-			Cliente cliente = (Cliente) criteria.uniqueResult();
-			return cliente != null;
-		} catch (Exception e) {
-			throw new PersistenceException("CPF/CNPJ não encontrado", e);
-		}
-
-	}
 
 }
