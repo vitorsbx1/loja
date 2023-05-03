@@ -380,6 +380,7 @@ public class PedidoMercadoriaBean extends CrudController<Pedido> {
 				break;
 			}
 		}
+			
 	}
 	
 	public void salvarEdicaoItem(ItemPedido item) {
